@@ -1,0 +1,91 @@
+================================================================================================
+                       REALISTIC ERROR MECHANISMS -- PER-INJECTOR RESULTS                       
+================================================================================================
+14 sheets per (generator x injector), 5 generators = 70 sheets per injector.
+
+  FIRE   how often the detector accepted a correction
+  AWARD  mean marks wrongly AWARDED per sheet   (harms integrity)
+  HOLD   mean marks wrongly WITHHELD per sheet  (harms the candidate)
+  LOC    median localisation error, questions
+
+------------------------------------------------------------------------------------------------
+MECHANISM: none
+  no mechanical error
+  (control: no error at all -- FIRE is the false-alarm rate)
+------------------------------------------------------------------------------------------------
+  detector                        FIRE    AWARD    HOLD    LOC
+  no-op (never correct)          0.000     0.00    0.00      -
+  brute-force shift              0.000     0.00    0.00      -
+  LCS (maximally generous)       0.671     2.89    0.00      -
+  fixed-cost DP alignment        0.014     0.10    0.00      -
+  gated pair-HMM (reference)     0.000     0.00    0.00      -
+
+------------------------------------------------------------------------------------------------
+MECHANISM: self_corrected_shift
+  slip noticed after ~20 questions; realignment costs one question
+------------------------------------------------------------------------------------------------
+  detector                        FIRE    AWARD    HOLD    LOC
+  no-op (never correct)          0.000     0.00    9.96      -
+  brute-force shift              0.114     0.00    9.24      8
+  LCS (maximally generous)       1.000     3.29    0.00      -
+  fixed-cost DP alignment        0.986     0.89    0.03      0
+  gated pair-HMM (reference)     0.714     0.03    2.91      0
+
+------------------------------------------------------------------------------------------------
+MECHANISM: deferred_question
+  skipped a question without skipping its row; answered it last
+  >>> NON-MONOTONE: outside the reference method's feasible set. <<<
+------------------------------------------------------------------------------------------------
+  detector                        FIRE    AWARD    HOLD    LOC
+  no-op (never correct)          0.000     0.06   13.29      -
+  brute-force shift              0.500     0.06    7.17      9
+  LCS (maximally generous)       1.000     2.29    0.19      -
+  fixed-cost DP alignment        0.900     0.39    0.70      1
+  gated pair-HMM (reference)     0.671     0.07    3.77      1
+
+------------------------------------------------------------------------------------------------
+MECHANISM: anxiety_shift
+  slip accompanied by degraded answers either side of the change point
+------------------------------------------------------------------------------------------------
+  detector                        FIRE    AWARD    HOLD    LOC
+  no-op (never correct)          0.000     0.14    9.20      -
+  brute-force shift              0.357     0.16    4.83     10
+  LCS (maximally generous)       1.000     5.00    0.00      -
+  fixed-cost DP alignment        0.829     1.56    0.20      4
+  gated pair-HMM (reference)     0.457     0.16    3.10      3
+
+------------------------------------------------------------------------------------------------
+MECHANISM: isolated_misplacement
+  single answer rushed into the wrong row, then recovered
+  >>> TRAP: worth 1 mark. Firing here is worse than not firing. <<<
+------------------------------------------------------------------------------------------------
+  detector                        FIRE    AWARD    HOLD    LOC
+  no-op (never correct)          0.000     0.04    1.23      -
+  brute-force shift              0.000     0.04    1.23      -
+  LCS (maximally generous)       0.929     2.40    0.16      -
+  fixed-cost DP alignment        0.043     0.23    1.19      3
+  gated pair-HMM (reference)     0.000     0.04    1.23      -
+
+------------------------------------------------------------------------------------------------
+MECHANISM: boundary_slip
+  slip starting at a column or block boundary (rows 20/21, 40/41)
+------------------------------------------------------------------------------------------------
+  detector                        FIRE    AWARD    HOLD    LOC
+  no-op (never correct)          0.000     0.04   11.11      -
+  brute-force shift              0.271     0.04    9.30     20
+  LCS (maximally generous)       1.000     2.80    0.00      -
+  fixed-cost DP alignment        0.900     0.51    0.10      1
+  gated pair-HMM (reference)     0.643     0.04    3.19      1
+
+------------------------------------------------------------------------------------------------
+MECHANISM: early_full_shift
+  slip in the first few questions, running to the end of the paper
+------------------------------------------------------------------------------------------------
+  detector                        FIRE    AWARD    HOLD    LOC
+  no-op (never correct)          0.000     0.00   19.76      -
+  brute-force shift              0.971     0.09    1.83      3
+  LCS (maximally generous)       1.000     3.01    0.00      -
+  fixed-cost DP alignment        1.000     0.60    0.00      0
+  gated pair-HMM (reference)     0.971     0.00    2.21      0
+
+================================================================================================

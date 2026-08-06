@@ -1,0 +1,25 @@
+============================================================================
+                 ITEM-WEIGHTED COHERENCE SCAN vs PLAIN SCAN                 
+============================================================================
+  Both statistics are calibrated by the SAME Monte-Carlo null at the
+  same alpha (0.001), with 1200 draws. Any difference is the
+  statistic alone.
+  Held-out sheets: 220 shifted, 220 clean.
+  Items genuinely vary in difficulty (sd of b = 1.48).
+
+  statistic                    power   false alarms
+  plain                        0.773          0.000
+  weighted                     0.768          0.000
+
+  PAIRED comparison on the same sheets (exact McNemar):
+    weighted detected, plain missed : 4
+    plain detected, weighted missed : 5
+    discordant pairs = 9,  two-sided p = 1.0000
+    verdict: no significant difference
+
+  On the appellant's real sheet (no item bank available):
+    plain scan    T =  1.806   Monte-Carlo p = 0.8943
+    weighted scan T =  2.650   Monte-Carlo p = 0.8485
+    (both must remain non-significant, or the refinement has
+     bought power by loosening the safety property)
+============================================================================

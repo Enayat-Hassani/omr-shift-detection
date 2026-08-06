@@ -1,0 +1,50 @@
+==============================================================================
+                 MECHANICAL ERROR TAXONOMY -- EXHAUSTIVE TEST                 
+==============================================================================
+Items: 46   options: 4   score as marked: 7/46
+Chance expectation: 11.5/46
+
+------------------------------------------------------------------------------
+A. STRUCTURED TRANSFORMATIONS  (each corrected for its search space)
+------------------------------------------------------------------------------
+  family                               best   of    raw p  tests  corr. p
+  COMBINED: symbol + displacement        12   19   0.0005   1752   0.5721
+      best: ABCD -> BCDA, offset -27                 -> not supported
+  POSITION: displacement                 15   34   0.0117     77   0.5948
+      best: offset +12                               -> not supported
+  POSITION: reversal                      9   46   0.8471      1   0.8471
+      best: reverse                                  -> not supported
+  POSITION: rotation                     17   46   0.0484     45   0.8928
+      best: rotate 27                                -> not supported
+  SYMBOL: option relabelling             16   46   0.0896     24   0.8950
+      best: ABCD -> BDAC                             -> not supported
+  POSITION: block/column swap            17   46   0.0484    128   0.9983
+      best: blocks of 10, order (3, 1, 2, 4, 0)      -> not supported
+
+------------------------------------------------------------------------------
+B. INVARIANCE TEST  (disposes of the ENTIRE position family at once)
+------------------------------------------------------------------------------
+  Re-ordering marks cannot create or destroy an option. So if these
+  marks are a re-ordering of a competent candidate's answers -- by ANY
+  mechanism, enumerated or not -- the mark COUNTS must match.
+
+   ability |    exp A   exp B   exp C   exp D    p-value
+  ------------------------------------------------------------
+      0.95 |     15.7    10.1    11.0     9.2    0.0000  <-- INCOMPATIBLE
+      0.85 |     15.1    10.3    11.1     9.5    0.0007  <-- INCOMPATIBLE
+      0.75 |     14.5    10.5    11.2     9.8    0.0138  <-- INCOMPATIBLE
+      0.65 |     13.9    10.7    11.2    10.2    0.0615
+      0.55 |     13.3    10.9    11.3    10.5    0.1454
+  OBSERVED |        7      12      13      14
+   key has |       16      10      11       9
+
+------------------------------------------------------------------------------
+C. RUN-STRUCTURE TEST  (is this sequence answer-like at all?)
+------------------------------------------------------------------------------
+  key     :  31 runs, longest 4, mean length 1.48
+  marks   :  21 runs, longest 5, mean length 2.19
+  P(marks this blocky | uniform random bubbling) = 0.0000
+  Displacement MOVES a sequence; it does not smooth it. Marks far
+  blockier than any real answer pattern were not produced by
+  displacing real answers.
+==============================================================================

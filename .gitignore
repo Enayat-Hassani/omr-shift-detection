@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+*.log
+.DS_Store
+.claude/
+.code-review-graph/
+
+PRIVATE/
+.mplconfig/
+ENGINEERING_NOTES.md

@@ -1,0 +1,81 @@
+==============================================================================
+               ACCEPTANCE PROFILES -- OPERATING CHARACTERISTICS               
+==============================================================================
+Sheet length 20. Single-row skips only. All sheets SYNTHETIC.
+
+------------------------------------------------------------------------------
+1. CALIBRATION  --  is the reported p-value a false positive rate?
+------------------------------------------------------------------------------
+  300 error-free sheets, ability 0.35 to 0.95, 999 draws per null.
+
+   nominal alpha   observed rate         
+             0.5           0.083 (25/300)
+            0.25           0.027  (8/300)
+             0.1           0.007  (2/300)
+            0.05           0.003  (1/300)
+            0.01           0.000  (0/300)
+           0.001           0.000  (0/300)
+
+  binding null on error-free sheets (the worst of the three is reported):
+    rotation            185 / 300
+    block_bootstrap      79 / 300
+    key_marginal         36 / 300
+
+  A nominal level that fires far less often than nominal is a
+  conservative bound, not a rate. See ASSUMPTIONS.md A6.
+
+------------------------------------------------------------------------------
+2. PROFILES  --  what each level recovers
+------------------------------------------------------------------------------
+  150 genuine single-row skips, ability 0.55 to 0.95, change point 2 to 16.
+  Marks lost to the skips in total: 1220
+
+    alpha       profile   detected   marks back  recovery   lost  misloc  min block
+    0.001  conservative   23/150     281/1220      23.0%      0       0         11
+   0.0025                 32/150     362/1220      29.7%      0       0         11
+    0.005                 36/150     401/1220      32.9%      0       0         10
+     0.01      balanced   41/150     426/1220      34.9%      0       0         10
+    0.025                 46/150     465/1220      38.1%      0       0          9
+     0.05     sensitive   52/150     503/1220      41.2%      0       0          8
+      0.1                 57/150     509/1220      41.7%      0       0          7
+
+  min block is the fewest CORRECT marks in a displaced block that
+  the level accepted -- what it can physically see. No level makes a
+  shorter displacement detectable.
+
+    alpha   t=0.55   t=0.65   t=0.75   t=0.85   t=0.95
+    0.001     1/30     0/30     3/30     8/30    11/30
+     0.01     1/30     2/30     7/30    13/30    18/30
+     0.05     1/30     2/30    11/30    15/30    23/30
+  detection by ability. Weak candidates are not recovered at any level.
+
+------------------------------------------------------------------------------
+3. WHICH GATE BINDS  --  at the default level
+------------------------------------------------------------------------------
+  Rejections with exactly one failing gate: 24
+    sole failing gate was monte_carlo          19
+    sole failing gate was bayes_factor          5
+    sole failing gate was segment_coherence     0
+    sole failing gate was non_trivial           0
+  Smallest displaced block on any accepted sheet: 7 items
+  Configured min_segment_length: 5
+
+------------------------------------------------------------------------------
+4. CERTIFICATION  --  false positives, all profiles at once
+------------------------------------------------------------------------------
+  1500 error-free sheets at alpha = 0.1, which is looser than
+  any profile. Acceptance at a tight alpha is a subset of acceptance
+  at a loose one, so this bounds all three.
+
+  false positives            : 0 / 1500
+  95% upper bound (C-P)      : 0.00200  (0.200%)
+  unearned marks per sheet at the bound, 1.8% base rate,
+  assuming 10 marks per false acceptance: 0.0196
+  no-correction baseline: 0.006. The 10-mark assumption is not
+  measured -- there were no false acceptances to measure it on --
+  and the figure scales linearly with it.
+
+==============================================================================
+Zero observed is not zero risk. Every sheet above is synthetic, and
+no confirmed historical case exists to calibrate against.
+==============================================================================

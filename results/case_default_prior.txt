@@ -1,0 +1,144 @@
+==============================================================================
+                      OMR ALIGNMENT ADJUDICATION REPORT                       
+==============================================================================
+Candidate            : CANDIDATE-001
+Subject              : Mathematics
+Questions / marks    : 46 / 46
+Options per item     : 4  (chance = 0.250)
+
+>>> VERDICT: NO RE-REGISTRATION -- ORIGINAL SCORE STANDS
+
+Original score       : 7 / 46 (15.2%)
+Adjudicated score    : 7 / 46 (15.2%)
+Items gained / lost  : 0 / 0
+
+------------------------------------------------------------------------------
+1. EVIDENCE
+------------------------------------------------------------------------------
+  log P(marks | H0, no shift)    =    -69.1634 nats
+  log P(marks | H1, some shift)  =    -73.1865 nats
+  log10 Bayes factor  BF(1:0)    =     -1.7472
+  Jeffreys interpretation        : strong AGAINST
+  Prior P(sheet has a slip)      = 0.0180
+  Posterior P(shift | marks)     = 0.000328
+  Operating ability theta        = 0.6000
+     source: prior mean (no external ability supplied)
+  Ability implied by this paper  = 0.2926   (DIAGNOSTIC ONLY -- never used for decoding)
+  Evidence break-even            = 5.22 questions
+     (a shift must newly repair at least this many answers before
+      the evidence outweighs the prior improbability of the slip)
+
+  ROBUSTNESS TO THE ABILITY ASSUMPTION
+  The verdict below is reported at one assumed ability. This table
+  sweeps every admissible ability, including the most generous:
+    theta   log10 BF  break-even  best score  MAP reading
+    0.251     -1.710     1473.09       7/46   identity (no shift)
+    0.301     -1.765       30.68       7/46   identity (no shift)
+    0.351     -1.756       16.23       7/46   identity (no shift)
+    0.401     -1.703       11.27       7/46   identity (no shift)
+    0.451     -1.609        8.71       7/46   identity (no shift)
+    0.501     -1.462        7.13       7/46   identity (no shift)
+    0.551     -1.240        6.03       7/46   identity (no shift)
+    0.601     -0.919        5.21       7/46   identity (no shift)
+    0.650     -0.486        4.56       7/46   identity (no shift)
+    0.700      0.063        4.03       7/46   identity (no shift)
+    0.750      0.741        3.57       7/46   identity (no shift)
+    0.800      1.593        3.16       7/46   identity (no shift)
+    0.850      2.759        2.77      14/46   RE-REGISTERED
+    0.900      4.411        2.38      14/46   RE-REGISTERED
+    0.950      7.171        1.94      14/46   RE-REGISTERED
+
+------------------------------------------------------------------------------
+2. MONTE-CARLO CALIBRATION  (assumption-free false-positive check)
+------------------------------------------------------------------------------
+  Statistic: coherence scan -- the most surprising contiguous block of
+  correct answers at ANY non-zero displacement, anywhere on the sheet.
+  Observed T = 1.8062   (i.e. best block p = 10^-1.81)
+  Strongest block: Q31-Q35 at offset +3, 4/5 correct (binomial p = 0.0156)
+  Secondary diagnostic, log evidence ratio = -2.1256
+  null                 p-value   null mean   null q95  null q99.9
+  key_marginal         0.84200       2.225      3.430       5.419
+  rotation             0.82900       2.523      3.419       3.419
+  block_bootstrap      0.90100       2.375      3.466       4.956
+  Reported (worst-case) p-value  = 0.90100  [binding null: block_bootstrap]
+
+------------------------------------------------------------------------------
+3. PRE-REGISTERED GATES
+------------------------------------------------------------------------------
+  [FAIL] bayes_factor         value=-1.74725  threshold=2
+         log10 BF(shift : no-shift) exceeds the decisive threshold
+  [FAIL] posterior            value=0.000327924  threshold=0.95
+         posterior P(shift | marks) after the base-rate prior
+  [FAIL] monte_carlo          value=0.901  threshold=0.01
+         worst-case Monte-Carlo p-value (binding null: block_bootstrap)
+  [FAIL] segment_coherence    value=0  threshold=0
+         every displaced segment is long enough and above chance
+  [FAIL] non_trivial          value=0  threshold=1
+         the MAP re-registration actually differs from the identity
+
+------------------------------------------------------------------------------
+4. MAP RE-REGISTRATION  (best-supported reading of the sheet)
+------------------------------------------------------------------------------
+  Segments of constant displacement: 1
+  segment                      n  correct    binom p  coherent
+  Q1-Q46 @ offset +0          46        7     0.9621  yes
+
+  No displacement change detected: the MAP reading is the identity.
+
+------------------------------------------------------------------------------
+5. ITEM LEDGER  (every question, every decision)
+------------------------------------------------------------------------------
+    Q  key       orig      final  off    post   chg  reason
+    1    B      r1=A       r1=A    +0  0.9993     -  kept: original registration
+    2    D      r2=B       r2=B    +0  0.9985     -  kept: original registration
+    3    A      r3=B       r3=B    +0  0.9978     -  kept: original registration
+    4    A      r4=B       r4=B    +0  0.9972     -  kept: original registration
+    5    A      r5=B       r5=B    +0  0.9965     -  kept: original registration
+    6    C      r6=D       r6=D    +0  0.9959     -  kept: original registration
+    7    C      r7=D       r7=D    +0  0.9953     -  kept: original registration
+    8    C      r8=D       r8=D    +0  0.9947     -  kept: original registration
+    9    C      r9=D       r9=D    +0  0.9942     -  kept: original registration
+   10    A     r10=D      r10=D    +0  0.9938     -  kept: original registration
+   11    A     r11=C      r11=C    +0  0.9934     -  kept: original registration
+   12    B     r12=B*     r12=B*   +0  0.9931     -  kept: original registration
+   13    C     r13=B      r13=B    +0  0.9927     -  kept: original registration
+   14    D     r14=B      r14=B    +0  0.9924     -  kept: original registration
+   15    A     r15=B      r15=B    +0  0.9921     -  kept: original registration
+   16    A     r16=A*     r16=A*   +0  0.9920     -  kept: original registration
+   17    B     r17=A      r17=A    +0  0.9919     -  kept: original registration
+   18    A     r18=D      r18=D    +0  0.9917     -  kept: original registration
+   19    A     r19=C      r19=C    +0  0.9917     -  kept: original registration
+   20    B     r20=C      r20=C    +0  0.9917     -  kept: original registration
+   21    A     r21=C      r21=C    +0  0.9917     -  kept: original registration
+   22    D     r22=D*     r22=D*   +0  0.9918     -  kept: original registration
+   23    C     r23=C*     r23=C*   +0  0.9918     -  kept: original registration
+   24    B     r24=B*     r24=B*   +0  0.9917     -  kept: original registration
+   25    A     r25=B      r25=B    +0  0.9915     -  kept: original registration
+   26    D     r26=B      r26=B    +0  0.9914     -  kept: original registration
+   27    A     r27=D      r27=D    +0  0.9913     -  kept: original registration
+   28    B     r28=D      r28=D    +0  0.9914     -  kept: original registration
+   29    B     r29=D      r29=D    +0  0.9915     -  kept: original registration
+   30    C     r30=A      r30=A    +0  0.9917     -  kept: original registration
+   31    C     r31=A      r31=A    +0  0.9919     -  kept: original registration
+   32    C     r32=A      r32=A    +0  0.9921     -  kept: original registration
+   33    C     r33=D      r33=D    +0  0.9922     -  kept: original registration
+   34    A     r34=C      r34=C    +0  0.9926     -  kept: original registration
+   35    D     r35=C      r35=C    +0  0.9930     -  kept: original registration
+   36    A     r36=C      r36=C    +0  0.9935     -  kept: original registration
+   37    A     r37=C      r37=C    +0  0.9940     -  kept: original registration
+   38    D     r38=D*     r38=D*   +0  0.9946     -  kept: original registration
+   39    C     r39=B      r39=B    +0  0.9951     -  kept: original registration
+   40    A     r40=D      r40=D    +0  0.9956     -  kept: original registration
+   41    B     r41=C      r41=C    +0  0.9961     -  kept: original registration
+   42    D     r42=C      r42=C    +0  0.9967     -  kept: original registration
+   43    B     r43=C      r43=C    +0  0.9974     -  kept: original registration
+   44    B     r44=C      r44=C    +0  0.9980     -  kept: original registration
+   45    D     r45=D*     r45=D*   +0  0.9988     -  kept: original registration
+   46    D     r46=A      r46=A    +0  0.9994     -  kept: original registration
+  ('*' marks a correct answer under that registration)
+
+==============================================================================
+Constraints honoured: the marked sequence was never altered, reordered,
+or invented. Only the question<->row registration was considered, and
+only strictly increasing registrations were admissible.
+==============================================================================

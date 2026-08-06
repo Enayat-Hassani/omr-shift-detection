@@ -1,0 +1,120 @@
+{
+  "meta": {
+    "mode": "full",
+    "seed": 20260804,
+    "n_metrics": 8,
+    "n_sweep": 8,
+    "perm": 1100,
+    "elapsed": 18099.230829000473,
+    "failures_collected": 60,
+    "generated": "2026-08-06 23:54:46 +08"
+  },
+  "overall": {
+    "gated": {
+      "n": 9984,
+      "error_sheets": 6144,
+      "clean_sheets": 3840,
+      "tp_correct": 456,
+      "tp_wrongloc": 272,
+      "fp": 0,
+      "fn": 5416,
+      "tn": 3840,
+      "power": 0.0742,
+      "fpr": 0.0,
+      "fpr_ci_upper": 0.0007,
+      "brier": NaN,
+      "mse": NaN,
+      "recovery": 0.2634,
+      "saved": 27275,
+      "at_stake": 103536,
+      "unearned": 2819
+    },
+    "bruteforce": {
+      "n": 9984,
+      "error_sheets": 6144,
+      "clean_sheets": 3840,
+      "tp_correct": 464,
+      "tp_wrongloc": 1589,
+      "fp": 519,
+      "fn": 4091,
+      "tn": 3321,
+      "power": 0.0755,
+      "fpr": 0.1352,
+      "fpr_ci_upper": 0.1445,
+      "brier": NaN,
+      "mse": NaN,
+      "recovery": 0.5577,
+      "saved": 57746,
+      "at_stake": 103536,
+      "unearned": 11235
+    },
+    "noop": {
+      "n": 9984,
+      "error_sheets": 6144,
+      "clean_sheets": 3840,
+      "tp_correct": 0,
+      "tp_wrongloc": 0,
+      "fp": 0,
+      "fn": 6144,
+      "tn": 3840,
+      "power": 0.0,
+      "fpr": 0.0,
+      "fpr_ci_upper": 0.0007,
+      "brier": 0.6154,
+      "mse": 0.0,
+      "recovery": 0.0,
+      "saved": 0,
+      "at_stake": 103536,
+      "unearned": 2793
+    }
+  },
+  "sweep_policies": {
+    "very_conservative": {
+      "fpr": 0.0,
+      "fpr_ci_upper": 0.0206,
+      "power": 0.1472,
+      "extra_per_error_sheet": 4.369,
+      "recovery": 0.2593,
+      "fp": 0,
+      "tp": 106
+    },
+    "conservative": {
+      "fpr": 0.0,
+      "fpr_ci_upper": 0.0206,
+      "power": 0.15,
+      "extra_per_error_sheet": 4.704,
+      "recovery": 0.2791,
+      "fp": 0,
+      "tp": 108
+    },
+    "default": {
+      "fpr": 0.0,
+      "fpr_ci_upper": 0.0206,
+      "power": 0.1764,
+      "extra_per_error_sheet": 5.243,
+      "recovery": 0.3111,
+      "fp": 0,
+      "tp": 127
+    },
+    "balanced": {
+      "fpr": 0.0,
+      "fpr_ci_upper": 0.0206,
+      "power": 0.1764,
+      "extra_per_error_sheet": 5.557,
+      "recovery": 0.3297,
+      "fp": 0,
+      "tp": 127
+    },
+    "permissive": {
+      "fpr": 0.0,
+      "fpr_ci_upper": 0.0206,
+      "power": 0.1903,
+      "extra_per_error_sheet": 5.922,
+      "recovery": 0.3514,
+      "fp": 0,
+      "tp": 137
+    }
+  },
+  "failures_collected": 60,
+  "generated": "2026-08-06 23:54:46 +08"
+}

@@ -1,0 +1,1910 @@
+[
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "row_skip_1"
+    },
+    "sheet_i": 0,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        15,
+        1
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.000323,
+    "log10_bayes_factor": -1.7535052562188844,
+    "mc_p": 1.0,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "row_skip_1"
+    },
+    "sheet_i": 1,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        11,
+        1
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.000429,
+    "log10_bayes_factor": -1.6304526140627833,
+    "mc_p": 1.0,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "row_skip_1"
+    },
+    "sheet_i": 2,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        14,
+        1
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.000512,
+    "log10_bayes_factor": -1.554053260651612,
+    "mc_p": 1.0,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "row_skip_1"
+    },
+    "sheet_i": 3,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        7,
+        1
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.000349,
+    "log10_bayes_factor": -1.7203237811164358,
+    "mc_p": 1.0,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "row_skip_1"
+    },
+    "sheet_i": 4,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        14,
+        1
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.000541,
+    "log10_bayes_factor": -1.5296571889572863,
+    "mc_p": 1.0,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "row_skip_1"
+    },
+    "sheet_i": 5,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        21,
+        1
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.000666,
+    "log10_bayes_factor": -1.4395903285124578,
+    "mc_p": 1.0,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "row_skip_1"
+    },
+    "sheet_i": 6,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        38,
+        1
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.00048,
+    "log10_bayes_factor": -1.5814697521539567,
+    "mc_p": 1.0,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "row_skip_1"
+    },
+    "sheet_i": 7,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        33,
+        1
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.00042,
+    "log10_bayes_factor": -1.639818500700216,
+    "mc_p": 1.0,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "row_skip_2"
+    },
+    "sheet_i": 0,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        19,
+        2
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.000529,
+    "log10_bayes_factor": -1.5397177124027126,
+    "mc_p": 0.5,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "row_skip_2"
+    },
+    "sheet_i": 1,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        39,
+        2
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.00038,
+    "log10_bayes_factor": -1.6829505812205001,
+    "mc_p": 0.4,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "row_skip_2"
+    },
+    "sheet_i": 2,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        19,
+        2
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.000248,
+    "log10_bayes_factor": -1.869149326422998,
+    "mc_p": 1.0,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "row_skip_2"
+    },
+    "sheet_i": 3,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        23,
+        2
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.000344,
+    "log10_bayes_factor": -1.726945911338558,
+    "mc_p": 1.0,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "row_skip_2"
+    },
+    "sheet_i": 4,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        16,
+        2
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.000741,
+    "log10_bayes_factor": -1.3929885036187926,
+    "mc_p": 1.0,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "row_skip_2"
+    },
+    "sheet_i": 5,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        28,
+        2
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.000402,
+    "log10_bayes_factor": -1.6585296904708733,
+    "mc_p": 1.0,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "row_skip_2"
+    },
+    "sheet_i": 6,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        20,
+        2
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.00074,
+    "log10_bayes_factor": -1.3935084610994177,
+    "mc_p": 1.0,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "row_skip_2"
+    },
+    "sheet_i": 7,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        27,
+        2
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.000359,
+    "log10_bayes_factor": -1.707772059480369,
+    "mc_p": 1.0,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "early_full"
+    },
+    "sheet_i": 0,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        3,
+        1
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.405355,
+    "log10_bayes_factor": 1.5704164470726267,
+    "mc_p": 0.0009082652134423251,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=ok | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "early_full"
+    },
+    "sheet_i": 1,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        1,
+        1
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.351594,
+    "log10_bayes_factor": 1.4710343189065997,
+    "mc_p": 0.0009082652134423251,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=ok | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "early_full"
+    },
+    "sheet_i": 2,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        2,
+        1
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.000385,
+    "log10_bayes_factor": -1.6773184602322986,
+    "mc_p": 0.6666666666666666,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "early_full"
+    },
+    "sheet_i": 3,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        2,
+        1
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.000651,
+    "log10_bayes_factor": -1.4490068597011585,
+    "mc_p": 1.0,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "early_full"
+    },
+    "sheet_i": 4,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        3,
+        1
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.000678,
+    "log10_bayes_factor": -1.431499371077283,
+    "mc_p": 1.0,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "early_full"
+    },
+    "sheet_i": 5,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        2,
+        1
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.000573,
+    "log10_bayes_factor": -1.5047881084076045,
+    "mc_p": 0.018867924528301886,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "early_full"
+    },
+    "sheet_i": 6,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        2,
+        1
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.001937,
+    "log10_bayes_factor": -0.975237170827947,
+    "mc_p": 1.0,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "early_full"
+    },
+    "sheet_i": 7,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        4,
+        1
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.000393,
+    "log10_bayes_factor": -1.6680906514907565,
+    "mc_p": 1.0,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "boundary"
+    },
+    "sheet_i": 0,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        21,
+        1
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.000608,
+    "log10_bayes_factor": -1.4786486363301732,
+    "mc_p": 0.5,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "boundary"
+    },
+    "sheet_i": 1,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        21,
+        1
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.000519,
+    "log10_bayes_factor": -1.5474032340897796,
+    "mc_p": 1.0,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "boundary"
+    },
+    "sheet_i": 2,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        41,
+        1
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.000351,
+    "log10_bayes_factor": -1.7175499365718192,
+    "mc_p": 1.0,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "boundary"
+    },
+    "sheet_i": 3,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        41,
+        1
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.000292,
+    "log10_bayes_factor": -1.7973934400689808,
+    "mc_p": 1.0,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "boundary"
+    },
+    "sheet_i": 4,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        21,
+        1
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.000314,
+    "log10_bayes_factor": -1.7666686744746174,
+    "mc_p": 1.0,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "boundary"
+    },
+    "sheet_i": 5,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        41,
+        1
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.000512,
+    "log10_bayes_factor": -1.5537255011450002,
+    "mc_p": 0.4,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "boundary"
+    },
+    "sheet_i": 6,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        21,
+        1
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.000352,
+    "log10_bayes_factor": -1.7166628652452036,
+    "mc_p": 1.0,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "boundary"
+    },
+    "sheet_i": 7,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        21,
+        1
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.000336,
+    "log10_bayes_factor": -1.7368167423107208,
+    "mc_p": 1.0,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "short_local"
+    },
+    "sheet_i": 0,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        14,
+        1
+      ],
+      [
+        19,
+        -1
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.000266,
+    "log10_bayes_factor": -1.8383118086580854,
+    "mc_p": 1.0,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "short_local"
+    },
+    "sheet_i": 1,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        23,
+        1
+      ],
+      [
+        31,
+        -1
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.000665,
+    "log10_bayes_factor": -1.440133235842718,
+    "mc_p": 0.6666666666666666,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "short_local"
+    },
+    "sheet_i": 2,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        19,
+        1
+      ],
+      [
+        26,
+        -1
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.000454,
+    "log10_bayes_factor": -1.6063601122334448,
+    "mc_p": 1.0,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "short_local"
+    },
+    "sheet_i": 3,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        11,
+        1
+      ],
+      [
+        17,
+        -1
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.000258,
+    "log10_bayes_factor": -1.85100118691984,
+    "mc_p": 0.5,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "short_local"
+    },
+    "sheet_i": 4,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        20,
+        1
+      ],
+      [
+        29,
+        -1
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.000759,
+    "log10_bayes_factor": -1.3825952016551033,
+    "mc_p": 0.2,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "short_local"
+    },
+    "sheet_i": 5,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        17,
+        1
+      ],
+      [
+        26,
+        -1
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.000459,
+    "log10_bayes_factor": -1.6014744510774253,
+    "mc_p": 0.6666666666666666,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "short_local"
+    },
+    "sheet_i": 6,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        10,
+        1
+      ],
+      [
+        18,
+        -1
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.000495,
+    "log10_bayes_factor": -1.5679328767144098,
+    "mc_p": 1.0,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "short_local"
+    },
+    "sheet_i": 7,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        5,
+        1
+      ],
+      [
+        10,
+        -1
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.00068,
+    "log10_bayes_factor": -1.4305142545797598,
+    "mc_p": 1.0,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "whole_section"
+    },
+    "sheet_i": 0,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        23,
+        1
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.000562,
+    "log10_bayes_factor": -1.512899945695724,
+    "mc_p": 1.0,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "whole_section"
+    },
+    "sheet_i": 1,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        23,
+        1
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.000233,
+    "log10_bayes_factor": -1.895728486602086,
+    "mc_p": 1.0,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "whole_section"
+    },
+    "sheet_i": 2,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        23,
+        1
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.000312,
+    "log10_bayes_factor": -1.768731428286562,
+    "mc_p": 1.0,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "whole_section"
+    },
+    "sheet_i": 3,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        23,
+        1
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.000434,
+    "log10_bayes_factor": -1.6253205347601647,
+    "mc_p": 1.0,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "whole_section"
+    },
+    "sheet_i": 4,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        23,
+        1
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.000142,
+    "log10_bayes_factor": -2.11169683550013,
+    "mc_p": 1.0,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "whole_section"
+    },
+    "sheet_i": 5,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        23,
+        1
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.000438,
+    "log10_bayes_factor": -1.6211205663606698,
+    "mc_p": 0.125,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "whole_section"
+    },
+    "sheet_i": 6,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        23,
+        1
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.000428,
+    "log10_bayes_factor": -1.631225262315071,
+    "mc_p": 0.5,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "whole_section"
+    },
+    "sheet_i": 7,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        23,
+        1
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.000373,
+    "log10_bayes_factor": -1.691440797128957,
+    "mc_p": 1.0,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "anxiety"
+    },
+    "sheet_i": 0,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        11,
+        1
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.001046,
+    "log10_bayes_factor": -1.2430233752940216,
+    "mc_p": 1.0,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "anxiety"
+    },
+    "sheet_i": 1,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        26,
+        1
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.000415,
+    "log10_bayes_factor": -1.6449062494344135,
+    "mc_p": 1.0,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "anxiety"
+    },
+    "sheet_i": 2,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        22,
+        1
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.000546,
+    "log10_bayes_factor": -1.5255915634521688,
+    "mc_p": 0.6666666666666666,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "anxiety"
+    },
+    "sheet_i": 3,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        30,
+        1
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.00051,
+    "log10_bayes_factor": -1.5554176634495416,
+    "mc_p": 1.0,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "anxiety"
+    },
+    "sheet_i": 4,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        31,
+        1
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.000418,
+    "log10_bayes_factor": -1.6420211634886532,
+    "mc_p": 1.0,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "anxiety"
+    },
+    "sheet_i": 5,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        25,
+        1
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.000455,
+    "log10_bayes_factor": -1.604488596402935,
+    "mc_p": 1.0,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "anxiety"
+    },
+    "sheet_i": 6,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        32,
+        1
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.000322,
+    "log10_bayes_factor": -1.7554750340552112,
+    "mc_p": 0.5,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "anxiety"
+    },
+    "sheet_i": 7,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        9,
+        1
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.000402,
+    "log10_bayes_factor": -1.65925024235568,
+    "mc_p": 1.0,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "double_shift"
+    },
+    "sheet_i": 0,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        19,
+        1
+      ],
+      [
+        26,
+        1
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.000772,
+    "log10_bayes_factor": -1.3753835622614616,
+    "mc_p": 1.0,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "double_shift"
+    },
+    "sheet_i": 1,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        12,
+        1
+      ],
+      [
+        38,
+        1
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.000419,
+    "log10_bayes_factor": -1.6403972189687206,
+    "mc_p": 1.0,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "double_shift"
+    },
+    "sheet_i": 2,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        10,
+        1
+      ],
+      [
+        37,
+        1
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.000988,
+    "log10_bayes_factor": -1.26778724613239,
+    "mc_p": 0.14285714285714285,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  },
+  {
+    "dataset": "metrics",
+    "policy": "metrics",
+    "condition": {
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "length": 46,
+      "ability": 0.26,
+      "mechanism": "double_shift"
+    },
+    "sheet_i": 3,
+    "seed": 20260804,
+    "has_shift": true,
+    "events": [
+      [
+        18,
+        1
+      ],
+      [
+        34,
+        1
+      ]
+    ],
+    "outcome": "FN",
+    "accepted": false,
+    "shift_locations": [],
+    "posterior_h1": 0.000233,
+    "log10_bayes_factor": -1.8957432858807963,
+    "mc_p": 1.0,
+    "explanation": "bayes_factor=FAIL | posterior=FAIL | monte_carlo=FAIL | segment_coherence=FAIL | non_trivial=FAIL"
+  }
+]

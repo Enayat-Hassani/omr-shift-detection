@@ -1,0 +1,10 @@
+# Core detection and adjudication run on the standard library alone.
+# The packages below are needed for figures and for the benchmarks.
+
+numpy>=1.20
+matplotlib>=3.4
+
+# Optional. benchmark/large_synthetic.py writes per-condition CSV summaries with
+# pandas when it is available, and falls back to the standard library when it is
+# not.
+# pandas>=1.3

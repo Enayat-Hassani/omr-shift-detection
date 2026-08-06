@@ -1,0 +1,20 @@
+============================================================================
+                    IRT EMISSION MODEL -- DOES IT HELP?                     
+============================================================================
+  cohort for calibration : 400 sheets (appellants excluded)
+  calibration            : Rasch JMLE on 400 cohort sheets
+  recovered difficulty   : mean +0.000, sd 1.005, range [-2.56, +2.05]
+  true difficulty sd     : 1.196
+  correlation(recovered, true) : +0.992
+
+  held-out appellant sheets: 40 shifted, 40 clean
+  Monte-Carlo draws per sheet: 2000 (must exceed 1/alpha = 1000)
+
+  emission model           power   false alarms
+  constant-theta           0.625          0.000
+  IRT                      0.650          0.000
+
+  Both emission models inherit the same gates, the same fairness
+  clamp and the same Monte-Carlo calibration, so any difference is
+  attributable to the emission model alone.
+============================================================================

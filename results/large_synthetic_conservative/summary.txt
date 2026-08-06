@@ -1,0 +1,40 @@
+################################################################
+ LARGE SYNTHETIC SHIFT-DETECTION BENCHMARK  --  summary
+################################################################
+
+Synthetic-only.  Every sheet has constructed ground truth.  No
+metric here is a deployment calibration of the detector on real
+paper (see README.md for why).  Brier / MSE are synthetic, in-
+corpus comparators, never absolute operating characteristics.
+
+mode        : full
+master seed : 20260804
+sheets/cell : metrics=8  sweep=8
+permutations: reference MC nulls (metrics)
+elapsed     : 18099.2s
+
+-- OVERALL (metrics corpus, event counts shown alongside rates) --
+  gated        n=  9984  TP=  456 TPwrongloc= 272 FP=   0 FN=5416 TN= 3840
+              power=0.0742  fpr=0.0000  (CP95 upper=0.0007)  recovery=0.2634  unearned=2819
+              brier=n/a  mse=n/a  saved=27275/103536 marks at stake
+  bruteforce   n=  9984  TP=  464 TPwrongloc=1589 FP= 519 FN=4091 TN= 3321
+              power=0.0755  fpr=0.1352  (CP95 upper=0.1445)  recovery=0.5577  unearned=11235
+              brier=n/a  mse=n/a  saved=57746/103536 marks at stake
+  noop         n=  9984  TP=    0 TPwrongloc=   0 FP=   0 FN=6144 TN= 3840
+              power=0.0000  fpr=0.0000  (CP95 upper=0.0007)  recovery=0.0000  unearned=2793
+              brier=0.6154  mse=0.0000  saved=0/103536 marks at stake
+
+-- THRESHOLD SWEEP (DISJOINT corpus; safety/recovery trade-offs) --
+  very_conservative  fpr=0.0000 (cp95 0.0206)  power=0.1472  extra/err-sheet=4.3690  recovery=0.2593
+  conservative       fpr=0.0000 (cp95 0.0206)  power=0.1500  extra/err-sheet=4.7040  recovery=0.2791
+  default            fpr=0.0000 (cp95 0.0206)  power=0.1764  extra/err-sheet=5.2430  recovery=0.3111
+  balanced           fpr=0.0000 (cp95 0.0206)  power=0.1764  extra/err-sheet=5.5570  recovery=0.3297
+  permissive         fpr=0.0000 (cp95 0.0206)  power=0.1903  extra/err-sheet=5.9220  recovery=0.3514
+
+The sweep is presented as policy trade-offs, NOT as tuning then
+reporting performance.  Default = out-of-the-box AdjudicationConfig.
+
+CP 95% bounds: exact Clopper-Pearson per cell (n<=200); Wilson
+approximation for the pooled overall bound (large n).
+
+Honest failure cases recorded in failure_cases.json : 60
