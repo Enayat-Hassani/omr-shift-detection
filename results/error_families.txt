@@ -48,3 +48,13 @@ C. RUN-STRUCTURE TEST  (is this sequence answer-like at all?)
   blockier than any real answer pattern were not produced by
   displacing real answers.
 ==============================================================================
+
+------------------------------------------------------------------------------
+PROVENANCE
+------------------------------------------------------------------------------
+  code fingerprint : 289baa30616c  (over 3 loaded modules)
+  commit           : 644ac3d
+  python           : 3.14.3    numpy: 2.4.4
+  Regenerating from unchanged code reproduces this file exactly;
+  an empty `git diff` is the check. See REPRODUCE.md.
+------------------------------------------------------------------------------

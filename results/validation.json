@@ -1,4 +1,13 @@
 {
+  "_provenance": {
+    "code_fingerprint": "303b77849003",
+    "n_source_files": 2,
+    "commit": "644ac3d",
+    "code_committed": true,
+    "python": "3.14.3",
+    "numpy": "2.4.4",
+    "params": {}
+  },
   "false_alarm_honest": 0.0,
   "false_alarm_honest_n": 180,
   "false_alarm_honest_ci95_upper": 0.016505228195662743,
@@ -6,11 +15,11 @@
   "false_alarm_adversarial_n": 120,
   "false_alarm_adversarial_ci95_upper": 0.024655401055656386,
   "power": {
-    "theta=0.55,mag=1": 0.35,
-    "theta=0.55,mag=2": 0.03333333333333333,
-    "theta=0.7,mag=1": 0.75,
+    "theta=0.55,mag=1": 0.3333333333333333,
+    "theta=0.55,mag=2": 0.06666666666666667,
+    "theta=0.7,mag=1": 0.7666666666666667,
     "theta=0.7,mag=2": 0.23333333333333334,
-    "theta=0.85,mag=1": 0.9166666666666666,
-    "theta=0.85,mag=2": 0.4166666666666667
+    "theta=0.85,mag=1": 0.9333333333333333,
+    "theta=0.85,mag=2": 0.45
   }
 }

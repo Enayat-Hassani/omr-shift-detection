@@ -22,19 +22,19 @@ supported by the evidence:
 HARD CONSTRAINTS (fairness axioms, enforced structurally, not by convention)
 ---------------------------------------------------------------------------
  A1  Content immutability   : the sequence of marked options is never altered.
- A2  Order preservation     : the question -> row map is STRICTLY increasing.
+ A2  Order preservation     : the question -> row map is strictly increasing.
  A3  Injectivity            : no row is read twice; no question is filled twice.
- A4  No invention           : an unmatched question scores ZERO, never credit.
+ A4  No invention           : an unmatched question scores zero, never credit.
  A5  Monotone credit        : leaving a question unmatched can never gain marks.
  A6  Bounded displacement   : |offset| <= D (physical plausibility of the slip).
  A7  Parsimony              : every shift event pays a prior-derived price.
  A8  Pre-registered gates   : re-registration is accepted only if a Bayes factor,
                               a Monte-Carlo p-value and per-segment binomial
-                              tests all clear thresholds fixed BEFORE seeing data.
+                              tests all clear thresholds fixed before seeing data.
 
 METHOD (see REPORT.md for the full comparison and ranking of alternatives)
 -------------------------------------------------------------------------
-A banded three-state PAIR HIDDEN MARKOV MODEL over (question, row) lattice
+A banded three-state pair hidden Markov model over (question, row) lattice
 positions, decoded exactly by:
    * Viterbi          -> the MAP re-registration (the "story")
    * Forward          -> the marginal likelihood  P(marks | H1)  (the "evidence")
@@ -49,8 +49,7 @@ probability and defended to an examination board.
 No optimisation library is used. All dynamic programming, log-space arithmetic,
 Bayesian marginalisation and hypothesis testing is implemented from scratch.
 
-Author: designed as a research-grade reference implementation.
-License: use freely for examination-board work.
+Licensed under the Apache Licence, Version 2.0. See LICENSE.
 ================================================================================
 """
 
@@ -63,6 +62,8 @@ import random
 from dataclasses import dataclass, field, replace
 from enum import Enum
 from functools import cached_property
+
+import provenance
 from typing import Dict, Iterable, List, Optional, Sequence, Tuple
 
 NEG_INF = float("-inf")
@@ -148,15 +149,27 @@ def clopper_pearson_upper(k: int, n: int, alpha: float = 0.05) -> float:
 
 
 def binom_sf(k: int, n: int, p: float) -> float:
-    """P(X >= k) for X ~ Binomial(n, p). Exact, via math.comb. One-sided."""
+    """P(X >= k) for X ~ Binomial(n, p). Exact, one-sided.
+
+    Accumulated in log space for the same reason as `clopper_pearson_upper`:
+    `math.comb(n, i)` is an exact integer of arbitrary size and multiplying it
+    by a float raises OverflowError past n of about 1030.
+    """
     if k <= 0:
         return 1.0
     if k > n:
         return 0.0
-    total = 0.0
-    for i in range(k, n + 1):
-        total += math.comb(n, i) * (p ** i) * ((1.0 - p) ** (n - i))
-    return min(1.0, max(0.0, total))
+    if p <= 0.0:
+        return 0.0
+    if p >= 1.0:
+        return 1.0
+    log_p, log_q = math.log(p), math.log1p(-p)
+    terms = [
+        math.lgamma(n + 1) - math.lgamma(i + 1) - math.lgamma(n - i + 1)
+        + i * log_p + (n - i) * log_q
+        for i in range(k, n + 1)
+    ]
+    return min(1.0, max(0.0, math.exp(logsumexp(terms))))
 
 
 # ==============================================================================
@@ -339,7 +352,7 @@ class AdjudicationConfig:
 
     Default is the EMPIRICAL rate measured by Skiena & Sumazin (2004), "Shift
     error detection in standardized exams", J. Discrete Algorithms 2:313-331:
-    1.8% of 101,265 Scholastic Amplitude Tests contained shift errors, with
+    1.8% of 101,265 Scholastic Aptitude Tests contained shift errors, with
     ~2% corroborated on Stony Brook undergraduate exams. Using a published,
     externally measured base rate is what makes the parsimony penalty (A7)
     auditable. A board with its own
@@ -387,10 +400,10 @@ class AdjudicationConfig:
     """Paired with `blank_safety` to keep axiom A5 satisfiable."""
 
     blank_safety: float = 0.5
-    """THE FAIRNESS CLAMP. The effective cost of leaving a question unmatched is
+    """The fairness clamp. The effective cost of leaving a question unmatched is
     forced to be at most `blank_safety` times the probability of a wrong match,
     at every theta. This makes 'unmatch the ones I got wrong to buy myself some
-    realignment freedom' strictly unprofitable BY CONSTRUCTION, at every parameter
+    realignment freedom' strictly unprofitable by construction, at every parameter
     setting."""
 
     theta_grid_size: int = 25
@@ -511,11 +524,11 @@ class ScoringModel:
     This matters: it means the model cannot get a free lunch by discarding a
     mark, and it prices marks by how surprising they are.
 
-    KEY DESIGN DECISION -- THE FAIRNESS CLAMP
-    -----------------------------------------
+    The fairness clamp
+    ------------------
     A wrong match costs log((1-theta)/(C-1)); an unmatched question costs
     log(blank_rate). If blank_rate ever exceeds (1-theta)/(C-1), then abandoning
-    a question becomes CHEAPER than admitting a wrong answer, and the model can
+    a question becomes cheaper than admitting a wrong answer, and the model can
     buy realignment freedom by discarding its own mistakes. That happens for
     theta above about 0.93 with realistic blank rates -- a real loophole, not a
     hypothetical one.
@@ -598,9 +611,18 @@ class ScoringModel:
 
     @cached_property
     def log_row_skip_open(self) -> float:
-        # per-position hazard of starting a slip
-        per_pos = self.cfg.sheet_slip_rate / max(1, self.sheet.n_questions)
-        return math.log(per_pos)
+        """Cost of a slip starting at this position, GIVEN that the sheet has
+        one.
+
+        Uniform over positions, so log(1/N). The sheet-level probability that a
+        slip exists at all is `sheet_slip_rate`, and it is applied once, as
+        prior odds in `EvidenceEngine.evaluate`. It was previously applied here
+        as well, which charged the base rate twice: the evidence ratio then
+        carried the prior inside it and was not a likelihood ratio, and the
+        posterior multiplied by the same 1.8% a second time. On a 20-question
+        sheet that over-penalised every displaced reading by 1.74 log10.
+        """
+        return -math.log(max(1, self.sheet.n_questions))
 
     @cached_property
     def log_row_skip_extend(self) -> float:
@@ -611,7 +633,7 @@ class ScoringModel:
                 + math.log(self.cfg.blank_safety))
 
     def log_blank_open(self, theta: float) -> float:
-        """Cost of leaving a question unmatched, under THE FAIRNESS CLAMP."""
+        """Cost of leaving a question unmatched, under the fairness clamp."""
         cache = self.__dict__.setdefault("_blank_open_cache", {})
         v = cache.get(theta)
         if v is None:
@@ -630,8 +652,12 @@ class ScoringModel:
     @cached_property
     def log_continue(self) -> float:
         """log P(no gap event at this position) -- keeps the model a proper
-        probability distribution."""
-        per_pos = self.cfg.sheet_slip_rate / max(1, self.sheet.n_questions)
+        probability distribution.
+
+        Complements `log_row_skip_open`, which is now conditional on a slip
+        existing, so the hazard subtracted here is the same 1/N.
+        """
+        per_pos = 1.0 / max(1, self.sheet.n_questions)
         return math.log(max(1e-12, 1.0 - per_pos - self.cfg.blank_rate))
 
     def break_even_questions(self, theta: float) -> float:
@@ -685,8 +711,8 @@ class BandedPairHMM:
       ORPHAN(Y) : row r answers no question            -> consumes a row
 
     A strictly increasing partial injection between questions and rows is
-    exactly a path through this lattice, so axioms A2 and A3 hold BY
-    CONSTRUCTION -- they cannot be violated by any parameter setting. That
+    exactly a path through this lattice, so axioms A2 and A3 hold by
+    construction -- they cannot be violated by any parameter setting. That
     structural guarantee is the reason this formulation was chosen over an
     unconstrained assignment or a free-form search.
 
@@ -818,6 +844,19 @@ class BandedPairHMM:
     # -- FORWARD : the marginal likelihood over every admissible alignment
 
     def forward(self) -> Tuple[List[List[List[float]]], float]:
+        """Memoised on the instance.
+
+        The evidence marginalisation and the posterior pass both need the
+        forward table at every ability on the grid, and previously each built
+        its own HMM and recomputed it. Holding the result here lets the two
+        share one pass. The table is read, never written, by its callers.
+        """
+        cached = getattr(self, "_forward_cache", None)
+        if cached is None:
+            cached = self._forward_cache = self._forward_compute()
+        return cached
+
+    def _forward_compute(self) -> Tuple[List[List[List[float]]], float]:
         F = self._new_table()
         F[STATE_M][0][0] = 0.0
         for q in range(0, self.N + 1):
@@ -933,6 +972,15 @@ class EvidenceEngine:
         self.cfg = model.cfg
         self.grid = self.cfg.theta_grid(model.n_opts)
         self.operating_theta = self.cfg.operating_theta(model.n_opts)
+        self._hmms: Dict[float, BandedPairHMM] = {}
+
+    def _hmm(self, theta: float) -> BandedPairHMM:
+        """One HMM per ability, reused across passes so the forward table is
+        computed once rather than once per caller."""
+        h = self._hmms.get(theta)
+        if h is None:
+            h = self._hmms[theta] = BandedPairHMM(self.model, theta)
+        return h
 
     def evaluate(self, include_profile: bool = True) -> Dict:
         """`include_profile=False` skips the ability-robustness sweep, which is
@@ -940,7 +988,7 @@ class EvidenceEngine:
         mode; always keep it on for an adjudication that will be published."""
         log_h0_terms, log_all_terms, per_theta = [], [], []
         for theta, logw in self.grid:
-            hmm = BandedPairHMM(self.model, theta)
+            hmm = self._hmm(theta)
             _, Z = hmm.forward()
             L0 = hmm.identity_log_likelihood()
             log_h0_terms.append(logw + L0)
@@ -953,6 +1001,9 @@ class EvidenceEngine:
         log_h1 = log_diff_exp(log_all, log_h0)
         log_bf = log_h1 - log_h0
 
+        # The one place the sheet-level base rate enters. The transition costs
+        # are conditional on a slip existing, so `log_bf` is a likelihood ratio
+        # and this is Bayes' rule applied once.
         prior_odds = self.cfg.sheet_slip_rate / (1.0 - self.cfg.sheet_slip_rate)
         log_post_odds = log_bf + math.log(prior_odds)
         post_h1 = 1.0 / (1.0 + math.exp(-log_post_odds)) if log_post_odds < 700 else 1.0
@@ -978,7 +1029,7 @@ class EvidenceEngine:
                 if self.cfg.external_ability is not None
                 else "prior mean (no external ability supplied)"
             ),
-            # Diagnostic only. NEVER used for decoding: fitting ability to this
+            # Diagnostic only. Never used for decoding: fitting ability to this
             # paper and then using it to re-register this paper is circular.
             "implied_ability_from_this_paper": sum(t * p for t, p in theta_post),
             "theta_profile": self.theta_profile() if include_profile else [],
@@ -986,7 +1037,7 @@ class EvidenceEngine:
 
     def theta_profile(self) -> List[Dict]:
         """
-        THE MOST IMPORTANT ROBUSTNESS OUTPUT.
+        The robustness output a board is most likely to ask for.
 
         The verdict depends on how competent we assume the candidate to be. A
         board should never have to take one assumed ability on trust. This
@@ -1026,7 +1077,7 @@ class EvidenceEngine:
         """Displacement posteriors, averaged over the ability posterior."""
         weights, posts = [], []
         for theta, logw in self.grid:
-            hmm = BandedPairHMM(self.model, theta)
+            hmm = self._hmm(theta)
             p, Z = hmm.posterior_offsets()
             weights.append(logw + Z)
             posts.append(p)
@@ -1378,10 +1429,29 @@ class NullCalibrator:
             out.extend(self.sheet.marks[(s + i) % n] for i in range(block))
         return replace(self.sheet, marks=tuple(out[:n]))
 
+    @staticmethod
+    def not_computed() -> Dict:
+        """The record for a sheet whose verdict was settled before calibration.
+
+        p = 1.0 is not a measurement. It is the value that cannot pass any
+        level, which is the honest reading for a sheet that has already failed
+        a gate. `computed` marks it as absent rather than observed so that a
+        reader, or a later aggregation, never mistakes it for evidence.
+        """
+        return {
+            "computed": False,
+            "observed_statistic": float("nan"),
+            "scan_window": None,
+            "evidence_ratio": float("nan"),
+            "nulls": {},
+            "p_value": 1.0,
+            "decisive_null": "not computed (verdict settled before calibration)",
+        }
+
     def run(self, n_perm: Optional[int] = None, early_stop: bool = False) -> Dict:
         """
         `early_stop=True` terminates each null as soon as the decision is
-        provably settled. This is EXACT.
+        provably settled. This is exact.
 
         The p-value is (exceedances + 1) / (draws + 1); passing at level alpha
         needs e <= alpha*(n+1) - 1. At alpha = 0.001 with n = 4000 that allows
@@ -1435,6 +1505,14 @@ class NullCalibrator:
                         if exceed > allowed:
                             stop = True
                             break
+            if not draws:
+                # Every draw was rejected as inadmissible. There is no null to
+                # compare against, so the only safe reading is that this null
+                # provides no support, not that it was passed.
+                raise ValueError(
+                    f"null '{name}' produced no admissible draws in {n_perm} "
+                    f"attempts; the sheet cannot be calibrated against it."
+                )
             exceed = sum(1 for d in draws if d >= observed)
             # add-one (Davison-Hinkley) estimator: never reports p = 0
             p = (exceed + 1) / (len(draws) + 1)
@@ -1450,6 +1528,7 @@ class NullCalibrator:
         worst = max(results.values(), key=lambda r: r["p_value"])
         _, window = self.scan.compute(self.sheet)
         return {
+            "computed": True,
             "observed_statistic": observed,
             "scan_window": window,
             "evidence_ratio": self.evidence_ratio(self.sheet),
@@ -1495,7 +1574,7 @@ class Adjudicator:
     """
     Orchestrates the pipeline and applies the pre-registered gates.
 
-    THE AWARD RULE
+    The award rule
     --------------
     Even after the global gates pass, credit is NOT granted wholesale. Each
     question is re-registered only if its own posterior on the MAP displacement
@@ -1516,37 +1595,59 @@ class Adjudicator:
         self.model = ScoringModel(sheet, self.cfg)
 
     def run(self, n_permutations: Optional[int] = None, verbose: bool = True,
-            early_stop: bool = False) -> Adjudication:
+            early_stop: bool = False, fast: bool = False) -> Adjudication:
+        """`fast=True` short-circuits sheets whose MAP registration is the
+        identity.
+
+        Acceptance is a conjunction, so the order the gates are evaluated in
+        does not affect the verdict. A sheet whose MAP re-registration is the
+        identity fails `non_trivial` and can never be accepted, whatever the
+        remaining gates return, so the two expensive passes it has not yet paid
+        for -- the permutation calibration and the forward-backward posteriors,
+        together about four-fifths of the cost -- decide nothing and are
+        skipped. Verdicts, awarded marks and every published rate are unchanged;
+        what is lost is the p-value and the item posteriors on sheets that were
+        rejected anyway. Those diagnostics are the point of a case report, so
+        the flag is off by default and the corpus runs turn it on.
+
+        It is also why the cohort screen does not use it: Benjamini-Hochberg
+        ranks the p-values of the whole sitting, so it needs a real p-value for
+        every sheet, including ones no gate would pass.
+        """
         warnings = list(self.model.validate_no_free_unmatch())
+        theta_hat = self.cfg.operating_theta(self.model.n_opts)
 
         if verbose:
-            print("  [1/5] marginalising ability and computing evidence ...")
-        engine = EvidenceEngine(self.model)
-        evidence = engine.evaluate(include_profile=not early_stop)
-        theta_hat = evidence["operating_theta"]
-
-        if verbose:
-            print("  [2/5] Viterbi decoding the MAP re-registration ...")
+            print("  [1/5] Viterbi decoding the MAP re-registration ...")
         alignment = BandedPairHMM(self.model, theta_hat).viterbi()
-
-        if verbose:
-            print("  [3/5] forward-backward for per-question posteriors ...")
-        posteriors = engine.posterior_mean_offsets()
 
         analyzer = SegmentAnalyzer(self.sheet, self.cfg)
         segments = analyzer.segments(alignment)
         change_points = analyzer.change_points(segments)
+        displaced = [s for s in segments if s.offset != 0]
+        decided = fast and not displaced
+
+        if verbose:
+            print("  [2/5] marginalising ability and computing evidence ...")
+        engine = EvidenceEngine(self.model)
+        evidence = engine.evaluate(include_profile=not early_stop)
+
+        if verbose:
+            print("  [3/5] forward-backward for per-question posteriors ...")
+        posteriors = {} if decided else engine.posterior_mean_offsets()
 
         if verbose:
             print(f"  [4/5] Monte-Carlo null calibration "
                   f"({n_permutations or self.cfg.n_permutations} draws x 3 nulls) ...")
-        calibration = NullCalibrator(self.model, theta_hat).run(
-            n_permutations, early_stop=early_stop)
+        if decided:
+            calibration = NullCalibrator.not_computed()
+        else:
+            calibration = NullCalibrator(self.model, theta_hat).run(
+                n_permutations, early_stop=early_stop)
 
         if verbose:
             print("  [5/5] applying pre-registered gates ...")
 
-        displaced = [s for s in segments if s.offset != 0]
         gates = {
             "bayes_factor": {
                 "value": evidence["log10_bayes_factor"],
@@ -1592,27 +1693,30 @@ class Adjudicator:
                 if s.offset == 0 or s.coherent:
                     coherent_q.update(range(s.q_start, s.q_end + 1))
 
+        proposals: List[Dict] = []
         for q in range(self.sheet.n_questions):
             orig_row = q if q < self.sheet.n_rows else None
-            orig_ok = orig_row is not None and self.sheet.marks[orig_row] == self.sheet.key[q]
             post = posteriors.get(q, {})
             map_d, map_p = (None, 0.0)
             if post:
                 map_d, map_p = max(post.items(), key=lambda kv: kv[1])
 
             new_row = orig_row
+            moved = False
             reason = "kept: original registration"
             if accepted and q in coherent_q:
                 prop = alignment.pairs.get(q)
                 if prop is None:
                     if map_p >= self.cfg.item_posterior_threshold and map_d is None:
                         new_row = None
+                        moved = True
                         reason = f"re-registered: unanswered (posterior {map_p:.4f})"
                     else:
                         reason = f"kept: blank proposed but posterior only {map_p:.4f}"
                 elif prop != orig_row:
                     if map_p >= self.cfg.item_posterior_threshold and map_d == prop - q:
                         new_row = prop
+                        moved = True
                         reason = (
                             f"re-registered to row {prop + 1} "
                             f"(offset {prop - q:+d}, posterior {map_p:.4f})"
@@ -1624,6 +1728,51 @@ class Adjudicator:
                         )
                 else:
                     reason = "kept: alignment agrees with original registration"
+            proposals.append({"q": q, "orig_row": orig_row, "new_row": new_row,
+                              "moved": moved, "map_d": map_d, "map_p": map_p,
+                              "reason": reason})
+
+        # ---- enforce A3 on what is actually awarded ------------------------
+        #
+        # The Viterbi path is injective by construction, but the award is not
+        # the path: it is applied per question, and a question whose own
+        # posterior falls short of the threshold is returned to its original
+        # row. If the alignment has meanwhile moved a different question onto
+        # that row, the two claims collide and one physical mark is read twice.
+        # It can be read twice CORRECTLY, so the same bubble earns two marks.
+        #
+        # Only one collision shape is possible. Two re-registered questions
+        # cannot collide, because the path is injective; two unmoved questions
+        # cannot collide, because their original rows are distinct. So a
+        # collision is always one moved question against one unmoved one, and
+        # it is resolved in favour of the moved one: that claim cleared the
+        # item posterior threshold, and the claim it displaces is the one the
+        # accepted alignment says is wrong. The displaced question is unmatched
+        # and scores zero, which is the conservative direction -- A4 -- and may
+        # cost the candidate a mark they held under the original registration.
+        # That is recorded as a loss in the ledger like any other.
+        claimants: Dict[int, List[Dict]] = {}
+        for p in proposals:
+            if p["new_row"] is not None:
+                claimants.setdefault(p["new_row"], []).append(p)
+        for row, claims in claimants.items():
+            if len(claims) < 2:
+                continue
+            movers = [c for c in claims if c["moved"]]
+            keep = movers[0] if movers else claims[0]
+            for c in claims:
+                if c is keep:
+                    continue
+                c["new_row"] = None
+                c["reason"] = (
+                    f"unmatched: row {row + 1} was re-registered to "
+                    f"Q{keep['q'] + 1}, and a mark cannot answer two questions"
+                )
+
+        for p in proposals:
+            q, orig_row, new_row = p["q"], p["orig_row"], p["new_row"]
+            map_d, map_p, reason = p["map_d"], p["map_p"], p["reason"]
+            orig_ok = orig_row is not None and self.sheet.marks[orig_row] == self.sheet.key[q]
 
             if new_row is not None:
                 awarded[q] = new_row
@@ -1743,24 +1892,30 @@ class Reporter:
         L.append("2. MONTE-CARLO CALIBRATION  (assumption-free false-positive check)")
         L.append("-" * w)
         c = a.calibration
-        L.append("  Statistic: coherence scan -- the most surprising contiguous block of")
-        L.append("  correct answers at ANY non-zero displacement, anywhere on the sheet.")
-        L.append(f"  Observed T = {c['observed_statistic']:.4f}   "
-                 f"(i.e. best block p = 10^-{c['observed_statistic']:.2f})")
-        wnd = c.get("scan_window")
-        if wnd:
-            L.append(f"  Strongest block: Q{wnd['q_start']}-Q{wnd['q_end']} at offset "
-                     f"{wnd['offset']:+d}, {wnd['n_correct']}/{wnd['n_items']} correct "
-                     f"(binomial p = {wnd['binom_p']:.3g})")
+        if not c.get("computed", True):
+            L.append("  Not computed. The MAP re-registration was the identity, so the")
+            L.append("  sheet had already failed a gate and no calibration could have")
+            L.append("  changed the verdict. Re-run without `fast` for the diagnostic.")
         else:
-            L.append("  No block above chance exists at any non-zero displacement.")
-        L.append(f"  Secondary diagnostic, log evidence ratio = {c['evidence_ratio']:+.4f}")
-        L.append(f"  {'null':<18}{'p-value':>10}{'null mean':>12}{'null q95':>11}{'null q99.9':>12}")
-        for name, r in c["nulls"].items():
-            L.append(f"  {name:<18}{r['p_value']:>10.5f}{r['null_mean']:>12.3f}"
-                     f"{r['null_q95']:>11.3f}{r['null_q999']:>12.3f}")
-        L.append(f"  Reported (worst-case) p-value  = {c['p_value']:.5f}  "
-                 f"[binding null: {c['decisive_null']}]")
+            L.append("  Statistic: coherence scan -- the most surprising contiguous block of")
+            L.append("  correct answers at ANY non-zero displacement, anywhere on the sheet.")
+            L.append(f"  Observed T = {c['observed_statistic']:.4f}   "
+                     f"(i.e. best block p = 10^-{c['observed_statistic']:.2f})")
+            wnd = c.get("scan_window")
+            if wnd:
+                L.append(f"  Strongest block: Q{wnd['q_start']}-Q{wnd['q_end']} at offset "
+                         f"{wnd['offset']:+d}, {wnd['n_correct']}/{wnd['n_items']} correct "
+                         f"(binomial p = {wnd['binom_p']:.3g})")
+            else:
+                L.append("  No block above chance exists at any non-zero displacement.")
+            L.append(f"  Secondary diagnostic, log evidence ratio = {c['evidence_ratio']:+.4f}")
+            L.append(f"  {'null':<18}{'p-value':>10}{'null mean':>12}"
+                     f"{'null q95':>11}{'null q99.9':>12}")
+            for name, r in c["nulls"].items():
+                L.append(f"  {name:<18}{r['p_value']:>10.5f}{r['null_mean']:>12.3f}"
+                         f"{r['null_q95']:>11.3f}{r['null_q999']:>12.3f}")
+            L.append(f"  Reported (worst-case) p-value  = {c['p_value']:.5f}  "
+                     f"[binding null: {c['decisive_null']}]")
         L.append("")
 
         L.append("-" * w)
@@ -1847,7 +2002,13 @@ class Reporter:
             },
             "gates": a.gates,
             "monte_carlo": {
-                "observed_statistic": a.calibration["observed_statistic"],
+                # null rather than NaN when the calibration was skipped, so the
+                # file stays valid JSON for a reader outside Python.
+                "computed": a.calibration.get("computed", True),
+                "observed_statistic": (
+                    a.calibration["observed_statistic"]
+                    if a.calibration.get("computed", True) else None
+                ),
                 "p_value": a.calibration["p_value"],
                 "decisive_null": a.calibration["decisive_null"],
                 "per_null": {
@@ -2362,7 +2523,169 @@ class GateStressTest:
 
 
 # ==============================================================================
-# 11. ENTRY POINT
+# 11. COHORT SCREENING  --  the multiple-comparisons layer
+# ==============================================================================
+
+
+@dataclass(frozen=True)
+class CohortDecision:
+    """One sheet's outcome under a cohort screen."""
+
+    sheet_id: str
+    p_value: float
+    accepted_alone: bool          # passed the five per-sheet criteria
+    accepted_in_cohort: bool      # and survived the multiple-comparisons layer
+
+
+@dataclass(frozen=True)
+class CohortReport:
+    n_sheets: int
+    n_flagged: int
+    q: float
+    bh_threshold: float
+    expected_false_discoveries: float
+    trigger_rate: float
+    expected_trigger_rate: float
+    trigger_alarm: bool
+    decisions: List[CohortDecision]
+
+    def text(self) -> str:
+        w = 74
+        L = ["=" * w, "COHORT SCREEN".center(w), "=" * w]
+        L.append(f"  sheets screened              : {self.n_sheets}")
+        L.append(f"  target false discovery rate  : {self.q}")
+        L.append(f"  Benjamini-Hochberg threshold : {self.bh_threshold:.6f}")
+        L.append(f"  sheets flagged               : {self.n_flagged}")
+        L.append(f"  expected false discoveries   : {self.expected_false_discoveries:.2f}")
+        L.append("")
+        L.append(f"  trigger rate                 : {self.trigger_rate:.4f}")
+        L.append(f"  expected at the base rate    : {self.expected_trigger_rate:.4f}")
+        if self.trigger_alarm:
+            L.append("  ALARM: the trigger rate is materially above the base rate.")
+            L.append("  Calibration cannot be assumed. The run should be discarded.")
+        else:
+            L.append("  trigger rate is within the expected range")
+        L.append("=" * w)
+        return "\n".join(L)
+
+
+class CohortScreen:
+    """Multiple-comparisons control for screening a whole sitting.
+
+    Every criterion in `Adjudicator` applies to one sheet. Running it over a
+    cohort and acting on whatever passes is a different problem: with 10,000
+    sheets, a per-sheet rate that is negligible once is not negligible ten
+    thousand times. Section 6.2 of the report names what this needs, and this
+    class is that: a Benjamini-Hochberg step-up over the per-sheet p-values, an
+    expected-false-discoveries figure, and a trigger-rate monitor.
+
+    A sheet is flagged only if it passes the per-sheet criteria AND survives the
+    step-up. The cohort layer can only remove sheets, never add them, so cohort
+    screening is never more permissive than adjudicating one sheet at a time.
+
+    The per-sheet p-value is the worst of three null models and is conservative
+    by a measured margin (A6). Benjamini-Hochberg on conservative p-values
+    controls the false discovery rate below the nominal level rather than at it,
+    so the figure reported here is an upper bound.
+
+    This is implemented and tested on synthetic cohorts. It has not been run
+    against a real sitting, and the base rate it compares against is Skiena and
+    Sumazin's rather than a board's own.
+    """
+
+    def __init__(self, q: float = 0.05, base_rate: float = 0.018,
+                 power: float = 0.112, trigger_tolerance: float = 3.0) -> None:
+        self.q = q
+        self.base_rate = base_rate
+        # A detector that flags every sheet carrying an error would trigger at
+        # the base rate. This one detects a fraction of them, so the rate to
+        # expect is base_rate * power. Comparing against the base rate alone
+        # made every healthy run look like a tenfold shortfall and left the
+        # alarm able to catch only catastrophic failure.
+        #
+        # The default is the power measured on corpus 2, which is a synthetic
+        # mixture of mechanisms and abilities. A board's own power will differ,
+        # and this is the number to change first when calibrating against a
+        # real sitting.
+        self.power = power
+        self.trigger_tolerance = trigger_tolerance
+
+    @staticmethod
+    def draws_required(n_sheets: int, q: float = 0.05) -> int:
+        """Permutation draws each sheet needs before a cohort of this size can
+        flag anything at all.
+
+        The step-up flags the largest k with p(k) <= k*q/m. The loosest of
+        those thresholds is the one at k = m, namely q, so a resolution below
+        q/m does not make flagging impossible: it removes the tightest rungs of
+        the ladder, and a cohort with many genuinely displaced sheets can still
+        flag at larger k.
+
+        What it does remove is the ability to flag a small number of sheets in a
+        large cohort, which is the case that matters at a 1.8% base rate. With
+        1/(n+1) above q/m, no sheet can be flagged at k = 1, and the screen
+        reports nothing on a sitting whose few genuine errors are exactly what
+        it was run to find. Deriving the count from the cohort avoids that.
+
+        The count grows linearly with the cohort. A sitting of 10,000 needs
+        199,999 draws per sheet against the 999 a single adjudication uses. That
+        is affordable only because early stopping abandons an error-free sheet
+        once its exceedance budget is spent, so the full count is paid on the
+        few sheets that look displaced rather than on all of them.
+        """
+        return math.ceil(n_sheets / q) - 1
+
+    def check_resolution(self, n_sheets: int, n_permutations: int) -> None:
+        """Raise if the p-values cannot reach this cohort's threshold."""
+        need = self.draws_required(n_sheets, self.q)
+        if n_permutations < need:
+            raise ValueError(
+                f"a cohort of {n_sheets} at q={self.q} puts the k=1 rung of the "
+                f"step-up at {self.q / n_sheets:.2e}, which takes at least {need} "
+                f"permutation draws to reach; {n_permutations} were used. Larger "
+                f"k remains reachable, so this is not a total block, but no "
+                f"sitting with only a handful of genuine errors can flag any of "
+                f"them, which is the case a 1.8% base rate produces."
+            )
+
+    def screen(self, results: Sequence[Tuple[str, float, bool]]) -> CohortReport:
+        """`results` is (sheet_id, per-sheet p-value, passed the per-sheet gate)."""
+        m = len(results)
+        if m == 0:
+            return CohortReport(0, 0, self.q, 0.0, 0.0, 0.0,
+                                self.base_rate, False, [])
+
+        # Benjamini-Hochberg step-up over every sheet screened. The threshold is
+        # the largest p(k) satisfying p(k) <= k*q/m; nothing above it is flagged.
+        ordered = sorted(results, key=lambda r: r[1])
+        threshold = 0.0
+        for k, (_, p, _) in enumerate(ordered, start=1):
+            if p <= k * self.q / m:
+                threshold = p
+
+        decisions = [
+            CohortDecision(sid, p, gate, bool(gate and p <= threshold))
+            for sid, p, gate in results
+        ]
+        flagged = sum(1 for d in decisions if d.accepted_in_cohort)
+        trigger = flagged / m
+        expected_trigger = self.base_rate * self.power
+        return CohortReport(
+            n_sheets=m,
+            n_flagged=flagged,
+            q=self.q,
+            bh_threshold=threshold,
+            # BH bounds the expected proportion of flagged sheets that are wrong.
+            expected_false_discoveries=self.q * flagged,
+            trigger_rate=trigger,
+            expected_trigger_rate=expected_trigger,
+            trigger_alarm=trigger > self.trigger_tolerance * expected_trigger,
+            decisions=decisions,
+        )
+
+
+# ==============================================================================
+# 12. ENTRY POINT
 # ==============================================================================
 #
 # No case data is held in this module. The detector is general; the sheet under
@@ -2397,7 +2720,8 @@ def demo_planted_shift(cfg: AdjudicationConfig, outdir: str) -> Adjudication:
     for k in key:
         truthful.append(k if rng.random() < 0.85 else rng.choice([o for o in "ABCD" if o != k]))
     at = 15  # 0-based: the slip happens entering Q16
-    marks = truthful[:at] + [rng.choice(list("ABCD"))] + truthful[at:]
+    # A skipped bubble row is left empty, matching the corpora and controls.
+    marks = truthful[:at] + [None] + truthful[at:]
     marks = marks[:n]
     sheet = ResponseSheet(key, tuple(marks), candidate_id="POSITIVE-CONTROL",
                           subject="Mathematics (simulated slip at Q16)")
@@ -2427,10 +2751,8 @@ def main() -> None:
     text = rep.text_report()
     print("\n" + text)
 
-    with open(os.path.join(here, "case_default_prior.txt"), "w") as f:
-        f.write(text)
-    with open(os.path.join(here, "case_detail.json"), "w") as f:
-        json.dump(rep.to_dict(), f, indent=2, default=str)
+    provenance.write_text(os.path.join(here, "case_default_prior.txt"), text)
+    provenance.write_json(os.path.join(here, "case_detail.json"), rep.to_dict())
 
     print("\nRendering figures ...")
     for p in Visualizer(adj, figdir).render_all():
@@ -2447,8 +2769,7 @@ def main() -> None:
     adj_b = Adjudicator(sheet, cfg_b).run(verbose=False)
     text_b = Reporter(adj_b).text_report()
     print(text_b)
-    with open(os.path.join(here, "case_high_ability_prior.txt"), "w") as f:
-        f.write(text_b)
+    provenance.write_text(os.path.join(here, "case_high_ability_prior.txt"), text_b)
     Visualizer(adj_b, os.path.join(figdir, "brilliant_prior")).render_all()
 
     # -- Run C: adversarial stress test ------------------------------------
@@ -2456,8 +2777,7 @@ def main() -> None:
     stress = GateStressTest(sheet, cfg).run()
     stress_txt = GateStressTest.render(stress)
     print(stress_txt)
-    with open(os.path.join(here, "gate_stress_test.txt"), "w") as f:
-        f.write(stress_txt)
+    provenance.write_text(os.path.join(here, "gate_stress_test.txt"), stress_txt)
 
     # ---- positive control ------------------------------------------------
     print("\n" + "=" * 78)
@@ -2466,8 +2786,7 @@ def main() -> None:
     ctrl = demo_planted_shift(cfg, figdir)
     ctext = Reporter(ctrl).text_report()
     print(ctext)
-    with open(os.path.join(here, "positive_control.txt"), "w") as f:
-        f.write(ctext)
+    provenance.write_text(os.path.join(here, "positive_control.txt"), ctext)
     Visualizer(ctrl, os.path.join(figdir, "positive_control")).render_all()
 
     # ---- operating characteristics ---------------------------------------
@@ -2486,8 +2805,7 @@ def main() -> None:
     for k, v in s["power"].items():
         print(f"    {k:<24} {v:.3f}")
     print(f"\n  wrote {os.path.relpath(SyntheticValidator.plot(val, figdir), here)}")
-    with open(os.path.join(here, "validation.json"), "w") as f:
-        json.dump(s, f, indent=2)
+    provenance.write_json(os.path.join(here, "validation.json"), s)
 
     print("\nDone.")
 

@@ -14,8 +14,6 @@ Six assumptions made during the design of the detector were stated in advance an
 
 **Effect.** Ability is floored at chance ($\theta \ge 0.25$) and taken from evidence external to the sheet, normally the candidate's other subjects. It is never fitted to the paper under appeal.
 
-Cook (2013) reports the same circularity from the other direction: estimating ability from the responses under test lets an undetected shift bias the estimate downward, which weakens detection. A purification method was tried there and found largely ineffective. See REPORT.md section 3.7.
-
 ---
 
 ## A2. The acceptance criteria resist an asserted candidate ability

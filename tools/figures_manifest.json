@@ -1,0 +1,256 @@
+{
+  "_comment": [
+    "Every number the documents publish, and the results file it comes from.",
+    "Checked by tools/check_figures.py; see that file for what a failure means.",
+    "",
+    "Fields:",
+    "  label    what the figure is, for the report line",
+    "  doc      the document that asserts it",
+    "  source   the results file that measures it",
+    "  path     dotted key path, for a JSON source",
+    "  pattern  regex with one capture group, for a plain-text source",
+    "  format   how the document writes the number (see FORMATS)",
+    "  claimed  what the document currently says, so a mismatch can name both",
+    "",
+    "`claimed` is a convenience for the error message. The check that matters",
+    "is whether the measured value, rendered in the document's own format,",
+    "appears in the document at all.",
+    "",
+    "Adding a published number means adding a row here. That friction is the",
+    "point: it is the moment to ask whether the number has a source."
+  ],
+  "claims": [
+    {
+      "label": "corpus 2: gated recovery",
+      "doc": "README.md",
+      "source": "results/large_synthetic/summary.json",
+      "path": "overall.gated.recovery",
+      "format": "pct1",
+      "claimed": "28.8%"
+    },
+    {
+      "label": "corpus 2: gated false positives",
+      "doc": "README.md",
+      "source": "results/large_synthetic/summary.json",
+      "path": "overall.gated.fp",
+      "format": "int",
+      "claimed": "0"
+    },
+    {
+      "label": "corpus 2: error-free sheets",
+      "doc": "README.md",
+      "source": "results/large_synthetic/summary.json",
+      "path": "overall.gated.clean_sheets",
+      "format": "int_comma",
+      "claimed": "3,840"
+    },
+    {
+      "label": "corpus 2: gated power",
+      "doc": "README.md",
+      "source": "results/large_synthetic/summary.json",
+      "path": "overall.gated.power",
+      "format": "num3",
+      "claimed": "0.094"
+    },
+    {
+      "label": "corpus 2: gated unearned marks",
+      "doc": "README.md",
+      "source": "results/large_synthetic/summary.json",
+      "path": "overall.gated.unearned",
+      "format": "int_comma",
+      "claimed": "2,835"
+    },
+    {
+      "label": "corpus 2: no-correction unearned marks",
+      "doc": "README.md",
+      "source": "results/large_synthetic/summary.json",
+      "path": "overall.noop.unearned",
+      "format": "int_comma",
+      "claimed": "2,793"
+    },
+    {
+      "label": "corpus 2: displacement scan FPR",
+      "doc": "README.md",
+      "source": "results/large_synthetic/summary.json",
+      "path": "overall.bruteforce.fpr",
+      "format": "num3",
+      "claimed": "0.135"
+    },
+    {
+      "label": "corpus 2: displacement scan recovery",
+      "doc": "README.md",
+      "source": "results/large_synthetic/summary.json",
+      "path": "overall.bruteforce.recovery",
+      "format": "pct1",
+      "claimed": "55.8%"
+    },
+    {
+      "label": "corpus 2: fixed-cost FPR",
+      "doc": "README.md",
+      "source": "results/large_synthetic/summary.json",
+      "path": "overall.fixedcost.fpr",
+      "format": "num3",
+      "claimed": "0.163"
+    },
+    {
+      "label": "corpus 2: fixed-cost recovery",
+      "doc": "README.md",
+      "source": "results/large_synthetic/summary.json",
+      "path": "overall.fixedcost.recovery",
+      "format": "pct1",
+      "claimed": "42.2%"
+    },
+    {
+      "label": "corpus 2: LCS FPR",
+      "doc": "README.md",
+      "source": "results/large_synthetic/summary.json",
+      "path": "overall.lcs.fpr",
+      "format": "num3",
+      "claimed": "0.830"
+    },
+    {
+      "label": "corpus 2: LCS recovery",
+      "doc": "README.md",
+      "source": "results/large_synthetic/summary.json",
+      "path": "overall.lcs.recovery",
+      "format": "pct1",
+      "claimed": "89.8%"
+    },
+    {
+      "label": "corpus 2: LCS unearned marks",
+      "doc": "README.md",
+      "source": "results/large_synthetic/summary.json",
+      "path": "overall.lcs.unearned",
+      "format": "int_comma",
+      "claimed": "141,684"
+    },
+    {
+      "label": "corpus 2: pooled false positive bound",
+      "doc": "README.md",
+      "source": "results/large_synthetic/summary.json",
+      "path": "overall.gated.fpr_ci_upper",
+      "format": "pct2",
+      "claimed": "0.07%"
+    },
+    {
+      "label": "corpus 1: gated recovery",
+      "doc": "README.md",
+      "source": "results/benchmark.txt",
+      "pattern": "gated pair-HMM \\(reference\\)\\s+(\\d+)%",
+      "format": "aspct0",
+      "claimed": "31%"
+    },
+    {
+      "label": "corpus 1: scan recovery",
+      "doc": "README.md",
+      "source": "results/benchmark.txt",
+      "pattern": "brute-force shift\\s+(\\d+)%",
+      "format": "aspct0",
+      "claimed": "31%"
+    },
+    {
+      "label": "corpus 1: fixed-cost recovery",
+      "doc": "README.md",
+      "source": "results/benchmark.txt",
+      "pattern": "fixed-cost DP alignment\\s+(\\d+)%",
+      "format": "aspct0",
+      "claimed": "94%"
+    },
+    {
+      "label": "corpus 1: gated unearned raw",
+      "doc": "README.md",
+      "source": "results/benchmark.txt",
+      "pattern": "gated pair-HMM \\(reference\\)\\s+\\d+%\\s+([\\d.]+)",
+      "format": "num2",
+      "claimed": "0.25"
+    },
+    {
+      "label": "corpus 1: no-op unearned raw",
+      "doc": "README.md",
+      "source": "results/benchmark.txt",
+      "pattern": "no-op \\(never correct\\)\\s+\\d+%\\s+([\\d.]+)",
+      "format": "num2",
+      "claimed": "0.24"
+    },
+    {
+      "label": "corpus 1: gated unearned @1.8%",
+      "doc": "README.md",
+      "source": "results/benchmark.txt",
+      "pattern": "gated pair-HMM \\(reference\\)\\s+\\d+%\\s+[\\d.]+\\s+([\\d.]+)",
+      "format": "num3",
+      "claimed": "0.006"
+    },
+    {
+      "label": "profile: conservative recovery",
+      "doc": "README.md",
+      "source": "results/policy_profiles.txt",
+      "pattern": "0\\.001\\s+conservative\\s+\\d+/\\d+\\s+\\d+/\\d+\\s+([\\d.]+)%",
+      "format": "aspct1",
+      "claimed": "23.0%"
+    },
+    {
+      "label": "profile: balanced recovery",
+      "doc": "README.md",
+      "source": "results/policy_profiles.txt",
+      "pattern": "0\\.01\\s+balanced\\s+\\d+/\\d+\\s+\\d+/\\d+\\s+([\\d.]+)%",
+      "format": "aspct1",
+      "claimed": "34.9%"
+    },
+    {
+      "label": "profile: sensitive recovery",
+      "doc": "README.md",
+      "source": "results/policy_profiles.txt",
+      "pattern": "0\\.05\\s+sensitive\\s+\\d+/\\d+\\s+\\d+/\\d+\\s+([\\d.]+)%",
+      "format": "aspct1",
+      "claimed": "41.2%"
+    },
+    {
+      "label": "profile: conservative detections",
+      "doc": "README.md",
+      "source": "results/policy_profiles.txt",
+      "pattern": "0\\.001\\s+conservative\\s+(\\d+)/150",
+      "format": "int",
+      "claimed": "23"
+    },
+    {
+      "label": "profile: balanced detections",
+      "doc": "README.md",
+      "source": "results/policy_profiles.txt",
+      "pattern": "0\\.01\\s+balanced\\s+(\\d+)/150",
+      "format": "int",
+      "claimed": "41"
+    },
+    {
+      "label": "profile: sensitive detections",
+      "doc": "README.md",
+      "source": "results/policy_profiles.txt",
+      "pattern": "0\\.05\\s+sensitive\\s+(\\d+)/150",
+      "format": "int",
+      "claimed": "52"
+    },
+    {
+      "label": "profile: certification bound",
+      "doc": "README.md",
+      "source": "results/policy_profiles.txt",
+      "pattern": "95% upper bound \\(C-P\\)\\s+:\\s+([\\d.]+)",
+      "format": "pct2",
+      "claimed": "0.20%"
+    },
+    {
+      "label": "corpus 2: mislocated detections",
+      "doc": "README.md",
+      "source": "results/large_synthetic/summary.json",
+      "path": "overall.gated.tp_wrongloc",
+      "format": "int",
+      "claimed": "302"
+    },
+    {
+      "label": "corpus 2: gated Brier",
+      "doc": "REPORT.md",
+      "source": "results/large_synthetic/summary.json",
+      "path": "overall.gated.brier",
+      "format": "num4",
+      "claimed": "0.202"
+    }
+  ]
+}

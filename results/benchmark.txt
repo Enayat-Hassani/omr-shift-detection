@@ -36,11 +36,11 @@ GENERATOR: adversarial_adaptable
 ------------------------------------------------------------------------------------------------------------
   n = 12 error-free and 36 error sheets per detector in this cell.
   detector                         FPR   (fp/n)     POW    (d/n)   AWARD   AW@BR    HOLD   LOC   BRIER
-  no-op (never correct)          0.000   (0/12)   0.000   (0/36)    1.25   0.030    0.62     -   0.750
-  brute-force shift              0.417   (5/12)   0.250   (9/36)    2.69   2.342    0.31    16   0.513
-  LCS (maximally generous)       1.000  (12/12)   1.000  (36/36)   14.81  13.613    0.00     -       -
-  fixed-cost DP alignment        0.750   (9/12)   0.583  (21/36)    5.77   5.425    0.17     9       -
-  gated pair-HMM (reference)     0.000   (0/12)   0.000   (0/36)    1.25   0.030    0.62     -   0.535
+  no-op (never correct)          0.000   (0/12)   0.000   (0/36)    1.10   0.026    0.98     -   0.750
+  brute-force shift              0.417   (5/12)   0.444  (16/36)    3.31   2.357    0.23    16   0.447
+  LCS (maximally generous)       1.000  (12/12)   1.000  (36/36)   14.65  13.609    0.00     -       -
+  fixed-cost DP alignment        1.000  (12/12)   0.889  (32/36)    7.31   7.089    0.00     8       -
+  gated pair-HMM (reference)     0.000   (0/12)   0.000   (0/36)    1.10   0.026    0.98     -   0.277
 
 ------------------------------------------------------------------------------------------------------------
 GENERATOR: attractive_distractor
@@ -49,11 +49,11 @@ GENERATOR: attractive_distractor
 ------------------------------------------------------------------------------------------------------------
   n = 12 error-free and 36 error sheets per detector in this cell.
   detector                         FPR   (fp/n)     POW    (d/n)   AWARD   AW@BR    HOLD   LOC   BRIER
-  no-op (never correct)          0.000   (0/12)   0.000   (0/36)    0.00   0.000   10.94     -   0.750
-  brute-force shift              0.000   (0/12)   0.417  (15/36)    0.00   0.000    7.71    11   0.448
-  LCS (maximally generous)       0.417   (5/12)   1.000  (36/36)    0.96   0.674    0.00     -       -
-  fixed-cost DP alignment        0.000   (0/12)   0.917  (33/36)    0.21   0.005    0.65     0       -
-  gated pair-HMM (reference)     0.000   (0/12)   0.278  (10/36)    0.00   0.000    7.94     1   0.043
+  no-op (never correct)          0.000   (0/12)   0.000   (0/36)    0.00   0.000   11.79     -   0.750
+  brute-force shift              0.000   (0/12)   0.556  (20/36)    0.00   0.000    8.00    14   0.401
+  LCS (maximally generous)       0.417   (5/12)   1.000  (36/36)    1.04   0.676    0.00     -       -
+  fixed-cost DP alignment        0.000   (0/12)   1.000  (36/36)    0.21   0.005    0.00     0       -
+  gated pair-HMM (reference)     0.000   (0/12)   0.389  (14/36)    0.00   0.000    7.52     0   0.000
 
 ------------------------------------------------------------------------------------------------------------
 GENERATOR: clean
@@ -62,11 +62,11 @@ GENERATOR: clean
 ------------------------------------------------------------------------------------------------------------
   n = 12 error-free and 36 error sheets per detector in this cell.
   detector                         FPR   (fp/n)     POW    (d/n)   AWARD   AW@BR    HOLD   LOC   BRIER
-  no-op (never correct)          0.000   (0/12)   0.000   (0/36)    0.00   0.000   12.29     -   0.750
-  brute-force shift              0.000   (0/12)   0.528  (19/36)    0.00   0.000    7.02     8   0.337
-  LCS (maximally generous)       0.500   (6/12)   1.000  (36/36)    0.98   0.674    0.00     -       -
-  fixed-cost DP alignment        0.000   (0/12)   0.944  (34/36)    0.21   0.005    0.40     0       -
-  gated pair-HMM (reference)     0.000   (0/12)   0.417  (15/36)    0.02   0.000    7.83     1   0.041
+  no-op (never correct)          0.000   (0/12)   0.000   (0/36)    0.00   0.000   12.04     -   0.750
+  brute-force shift              0.000   (0/12)   0.528  (19/36)    0.00   0.000    8.10    11   0.384
+  LCS (maximally generous)       0.500   (6/12)   1.000  (36/36)    0.81   0.670    0.00     -       -
+  fixed-cost DP alignment        0.000   (0/12)   1.000  (36/36)    0.10   0.003    0.00     0       -
+  gated pair-HMM (reference)     0.000   (0/12)   0.389  (14/36)    0.00   0.000    8.21     0   0.000
 
 ------------------------------------------------------------------------------------------------------------
 GENERATOR: irt_2pl
@@ -75,11 +75,11 @@ GENERATOR: irt_2pl
 ------------------------------------------------------------------------------------------------------------
   n = 12 error-free and 36 error sheets per detector in this cell.
   detector                         FPR   (fp/n)     POW    (d/n)   AWARD   AW@BR    HOLD   LOC   BRIER
-  no-op (never correct)          0.000   (0/12)   0.000   (0/36)    0.00   0.000   10.52     -   0.750
-  brute-force shift              0.000   (0/12)   0.306  (11/36)    0.00   0.000    7.77     8   0.468
-  LCS (maximally generous)       0.583   (7/12)   1.000  (36/36)    1.17   0.760    0.00     -       -
-  fixed-cost DP alignment        0.000   (0/12)   0.944  (34/36)    0.17   0.004    0.50     0       -
-  gated pair-HMM (reference)     0.000   (0/12)   0.361  (13/36)    0.00   0.000    7.44     0   0.051
+  no-op (never correct)          0.000   (0/12)   0.000   (0/36)    0.00   0.000   11.15     -   0.750
+  brute-force shift              0.000   (0/12)   0.528  (19/36)    0.00   0.000    7.02    12   0.390
+  LCS (maximally generous)       0.583   (7/12)   1.000  (36/36)    1.19   0.760    0.00     -       -
+  fixed-cost DP alignment        0.000   (0/12)   1.000  (36/36)    0.15   0.003    0.02     0       -
+  gated pair-HMM (reference)     0.000   (0/12)   0.472  (17/36)    0.00   0.000    6.96     0   0.000
 
 ------------------------------------------------------------------------------------------------------------
 GENERATOR: nonstationary_ability
@@ -88,11 +88,11 @@ GENERATOR: nonstationary_ability
 ------------------------------------------------------------------------------------------------------------
   n = 12 error-free and 36 error sheets per detector in this cell.
   detector                         FPR   (fp/n)     POW    (d/n)   AWARD   AW@BR    HOLD   LOC   BRIER
-  no-op (never correct)          0.000   (0/12)   0.000   (0/36)    0.02   0.000    6.58     -   0.750
-  brute-force shift              0.000   (0/12)   0.194   (7/36)    0.02   0.000    5.25     8   0.567
-  LCS (maximally generous)       1.000  (12/12)   1.000  (36/36)    4.06   3.920    0.00     -       -
-  fixed-cost DP alignment        0.000   (0/12)   0.806  (29/36)    0.71   0.017    0.73     0       -
-  gated pair-HMM (reference)     0.000   (0/12)   0.222   (8/36)    0.02   0.000    5.31     0   0.200
+  no-op (never correct)          0.000   (0/12)   0.000   (0/36)    0.00   0.000    7.12     -   0.750
+  brute-force shift              0.000   (0/12)   0.250   (9/36)    0.00   0.000    5.96    11   0.587
+  LCS (maximally generous)       1.000  (12/12)   1.000  (36/36)    3.85   3.915    0.00     -       -
+  fixed-cost DP alignment        0.167   (2/12)   0.972  (35/36)    0.79   0.751    0.10     0       -
+  gated pair-HMM (reference)     0.000   (0/12)   0.167   (6/36)    0.00   0.000    6.15     0   0.020
 
 ------------------------------------------------------------------------------------------------------------
 GENERATOR: option_bias
@@ -101,11 +101,11 @@ GENERATOR: option_bias
 ------------------------------------------------------------------------------------------------------------
   n = 12 error-free and 36 error sheets per detector in this cell.
   detector                         FPR   (fp/n)     POW    (d/n)   AWARD   AW@BR    HOLD   LOC   BRIER
-  no-op (never correct)          0.000   (0/12)   0.000   (0/36)    0.00   0.000   11.27     -   0.750
-  brute-force shift              0.000   (0/12)   0.389  (14/36)    0.00   0.000    7.90    11   0.436
-  LCS (maximally generous)       0.250   (3/12)   1.000  (36/36)    0.50   0.256    0.00     -       -
-  fixed-cost DP alignment        0.000   (0/12)   0.944  (34/36)    0.15   0.003    0.48     1       -
-  gated pair-HMM (reference)     0.000   (0/12)   0.389  (14/36)    0.00   0.000    7.58     0   0.039
+  no-op (never correct)          0.000   (0/12)   0.000   (0/36)    0.00   0.000   12.35     -   0.750
+  brute-force shift              0.000   (0/12)   0.472  (17/36)    0.00   0.000    8.25    10   0.390
+  LCS (maximally generous)       0.250   (3/12)   1.000  (36/36)    0.42   0.254    0.00     -       -
+  fixed-cost DP alignment        0.000   (0/12)   1.000  (36/36)    0.10   0.003    0.06     0       -
+  gated pair-HMM (reference)     0.000   (0/12)   0.528  (19/36)    0.00   0.000    7.33     0   0.000
 
 ------------------------------------------------------------------------------------------------------------
 GENERATOR: streaky_guesser
@@ -114,11 +114,11 @@ GENERATOR: streaky_guesser
 ------------------------------------------------------------------------------------------------------------
   n = 12 error-free and 36 error sheets per detector in this cell.
   detector                         FPR   (fp/n)     POW    (d/n)   AWARD   AW@BR    HOLD   LOC   BRIER
-  no-op (never correct)          0.000   (0/12)   0.000   (0/36)    0.88   0.021    0.62     -   0.750
-  brute-force shift              0.000   (0/12)   0.194   (7/36)    1.73   0.041    0.46    12   0.517
-  LCS (maximally generous)       1.000  (12/12)   1.000  (36/36)   10.60  10.177    0.00     -       -
-  fixed-cost DP alignment        0.000   (0/12)   0.083   (3/36)    1.35   0.033    0.52    14       -
-  gated pair-HMM (reference)     0.000   (0/12)   0.000   (0/36)    0.88   0.021    0.62     -   0.708
+  no-op (never correct)          0.000   (0/12)   0.000   (0/36)    0.44   0.011    0.67     -   0.750
+  brute-force shift              0.000   (0/12)   0.222   (8/36)    1.06   0.025    0.38    26   0.499
+  LCS (maximally generous)       1.000  (12/12)   1.000  (36/36)   10.54  10.176    0.00     -       -
+  fixed-cost DP alignment        0.417   (5/12)   0.611  (22/36)    3.08   2.107    0.10     6       -
+  gated pair-HMM (reference)     0.000   (0/12)   0.000   (0/36)    0.44   0.011    0.67     -   0.260
 
 ------------------------------------------------------------------------------------------------------------
 GENERATOR: time_truncated
@@ -127,11 +127,11 @@ GENERATOR: time_truncated
 ------------------------------------------------------------------------------------------------------------
   n = 12 error-free and 36 error sheets per detector in this cell.
   detector                         FPR   (fp/n)     POW    (d/n)   AWARD   AW@BR    HOLD   LOC   BRIER
-  no-op (never correct)          0.000   (0/12)   0.000   (0/36)    0.10   0.003    6.90     -   0.750
-  brute-force shift              0.000   (0/12)   0.278  (10/36)    0.10   0.003    4.83     8   0.532
-  LCS (maximally generous)       0.333   (4/12)   1.000  (36/36)    1.21   0.436    0.00     -       -
-  fixed-cost DP alignment        0.000   (0/12)   0.750  (27/36)    0.46   0.011    0.40     1       -
-  gated pair-HMM (reference)     0.000   (0/12)   0.333  (12/36)    0.10   0.003    4.35     0   0.182
+  no-op (never correct)          0.000   (0/12)   0.000   (0/36)    0.08   0.002    6.69     -   0.750
+  brute-force shift              0.000   (0/12)   0.417  (15/36)    0.08   0.002    4.23     9   0.475
+  LCS (maximally generous)       0.333   (4/12)   0.944  (34/36)    1.23   0.436    0.00     -       -
+  fixed-cost DP alignment        0.000   (0/12)   0.750  (27/36)    0.48   0.011    0.10     0       -
+  gated pair-HMM (reference)     0.000   (0/12)   0.444  (16/36)    0.08   0.002    3.42     0   0.136
 
 ------------------------------------------------------------------------------------------------------------
 GENERATOR: topic_clustered
@@ -140,11 +140,11 @@ GENERATOR: topic_clustered
 ------------------------------------------------------------------------------------------------------------
   n = 12 error-free and 36 error sheets per detector in this cell.
   detector                         FPR   (fp/n)     POW    (d/n)   AWARD   AW@BR    HOLD   LOC   BRIER
-  no-op (never correct)          0.000   (0/12)   0.000   (0/36)    0.00   0.000   11.10     -   0.750
-  brute-force shift              0.000   (0/12)   0.444  (16/36)    0.00   0.000    7.65    11   0.404
-  LCS (maximally generous)       0.667   (8/12)   1.000  (36/36)    1.73   1.099    0.00     -       -
-  fixed-cost DP alignment        0.000   (0/12)   1.000  (36/36)    0.31   0.007    0.46     1       -
-  gated pair-HMM (reference)     0.000   (0/12)   0.361  (13/36)    0.00   0.000    7.46     0   0.002
+  no-op (never correct)          0.000   (0/12)   0.000   (0/36)    0.00   0.000   10.15     -   0.750
+  brute-force shift              0.000   (0/12)   0.389  (14/36)    0.00   0.000    7.17    11   0.467
+  LCS (maximally generous)       0.667   (8/12)   1.000  (36/36)    1.58   1.095    0.00     -       -
+  fixed-cost DP alignment        0.000   (0/12)   1.000  (36/36)    0.35   0.008    0.04     0       -
+  gated pair-HMM (reference)     0.000   (0/12)   0.389  (14/36)    0.00   0.000    6.96     1   0.000
 
 ------------------------------------------------------------------------------------------------------------
 GENERATOR: two_regime
@@ -153,11 +153,11 @@ GENERATOR: two_regime
 ------------------------------------------------------------------------------------------------------------
   n = 12 error-free and 36 error sheets per detector in this cell.
   detector                         FPR   (fp/n)     POW    (d/n)   AWARD   AW@BR    HOLD   LOC   BRIER
-  no-op (never correct)          0.000   (0/12)   0.000   (0/36)    0.12   0.003    5.27     -   0.750
-  brute-force shift              0.000   (0/12)   0.167   (6/36)    0.15   0.003    4.00     8   0.584
-  LCS (maximally generous)       0.917  (11/12)   1.000  (36/36)    6.56   5.282    0.00     -       -
-  fixed-cost DP alignment        0.000   (0/12)   0.750  (27/36)    1.44   0.034    0.42     0       -
-  gated pair-HMM (reference)     0.000   (0/12)   0.250   (9/36)    0.21   0.005    3.54     1   0.223
+  no-op (never correct)          0.000   (0/12)   0.000   (0/36)    0.27   0.006    4.35     -   0.750
+  brute-force shift              0.000   (0/12)   0.139   (5/36)    0.27   0.006    3.62     8   0.611
+  LCS (maximally generous)       0.917  (11/12)   1.000  (36/36)    6.75   5.286    0.00     -       -
+  fixed-cost DP alignment        0.167   (2/12)   0.778  (28/36)    2.06   0.863    0.12     0       -
+  gated pair-HMM (reference)     0.000   (0/12)   0.139   (5/36)    0.27   0.006    3.75     0   0.149
 
 ------------------------------------------------------------------------------------------------------------
 RECOVERY, POOLED ACROSS GENERATORS
@@ -166,13 +166,24 @@ RECOVERY, POOLED ACROSS GENERATORS
   no-op anchoring 0%. This is the figure quoted in the documents.
 
   detector                      recovery   AWARD (raw)   AWARD @1.8%
-  no-op (never correct)              0%          0.24         0.006
+  no-op (never correct)              0%          0.19         0.005
   brute-force shift                 31%          0.47         0.239
-  LCS (maximally generous)         100%          4.26         3.689
-  fixed-cost DP alignment           94%          1.08         0.555
-  gated pair-HMM (reference)        31%          0.25         0.006
+  LCS (maximally generous)         100%          4.21         3.688
+  fixed-cost DP alignment           99%          1.46         1.084
+  gated pair-HMM (reference)        33%          0.19         0.005
 
   AWARD (raw) is a mean over benchmark cells, which hold three error
   sheets per error-free sheet. A board screening at the historical 1.8%
   base rate would see the reweighted figure instead.
 ============================================================================================================
+
+------------------------------------------------------------------------------
+PROVENANCE
+------------------------------------------------------------------------------
+  code fingerprint : e6de1b8417d0  (over 3 loaded modules)
+  commit           : 644ac3d
+  python           : 3.14.3    numpy: 2.4.4
+  parameters       : seed=20260804, sheets_per_cell=12
+  Regenerating from unchanged code reproduces this file exactly;
+  an empty `git diff` is the check. See REPRODUCE.md.
+------------------------------------------------------------------------------

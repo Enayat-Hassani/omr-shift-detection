@@ -1,64 +1,25 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
-================================================================================
- ITEM RESPONSE THEORY EMISSIONS FOR THE PAIR-HMM
-================================================================================
+Item Response Theory (IRT) emissions for the Pair-HMM alignment model.
 
-The reference model assumes a single ability theta and treats every item as
-equally hard:
+WHY THIS EXISTS
+The reference model treats all items as equally difficult. This module incorporates
+item-specific difficulty, discrimination, and guessing parameters to improve shift
+detection accuracy.
 
-    P(mark = key | aligned) = theta,  for all items.
-
-That is a Rasch model with all item difficulties tied to zero -- psychometrically
-the weakest assumption in the whole system, and the one flagged as the highest
--value extension in REPORT.md section 11. Cook (2013), cited in REPORT.md,
-applies item response theory to this same problem, so an IRT emission inside a
-probabilistic alignment model is the obvious next thing to try. It was tried.
-The result is in ASSUMPTIONS.md A4: no measurable improvement.
-
-That is not a comparison against Cook's method. This varies the emission model
-inside the alignment; it does not implement a rival IRT detector.
-
-THE MODEL
----------
-Three-parameter logistic, per item j:
-
-    P(correct on item j | theta) = c_j + (1 - c_j) * sigma( a_j * (theta - b_j) )
-
-    b_j  difficulty       -- where on the ability scale the item bites
-    a_j  discrimination   -- how sharply it separates candidates
-    c_j  pseudo-guessing  -- the floor; defaults to 1/C, which is exactly the
-                             chance baseline the coherence scan already uses,
-                             so the two components stay consistent
-
-WHY THIS MATTERS FOR SHIFT DETECTION SPECIFICALLY
--------------------------------------------------
-It changes what counts as EVIDENCE of misalignment.
-
-Under the constant-theta model, every wrong answer is equally surprising. Under
-IRT, a candidate getting an EASY item wrong is strong evidence that something
-mechanical went wrong; getting a HARD item wrong is barely evidence at all. The
-log-likelihood ratio becomes item-weighted, so the detector concentrates on the
-items that actually discriminate.
-
-Symmetrically, a displaced alignment that "repairs" a run of easy items is worth
-much less than one that repairs a run of hard items -- which is precisely the
-right scepticism, because easy items have common answers and align by chance
-more often.
+WHY THIS MATTERS
+- Easy item failures provide strong evidence of misalignment.
+- Hard item failures provide weak evidence.
+- Log-likelihood ratios scale by item difficulty to focus on discriminating questions.
 
 CALIBRATION
------------
-Item parameters come from the COHORT, never from the candidate under appeal.
-`RaschCalibrator` implements joint maximum likelihood from scratch (no external
-libraries): alternating Newton updates on item difficulties and person
-abilities, with the usual centring constraint for identifiability.
-
-With no cohort available, `ItemBank.uninformative()` reproduces the constant-
-theta model exactly, so the IRT path is a strict generalisation -- it can only
-add information, never silently change behaviour when there is none to add.
-================================================================================
+- Calculates item parameters from the cohort using joint maximum likelihood.
+- Defaults to the constant-theta model when no cohort data exists.
 """
+
 
 from __future__ import annotations
 

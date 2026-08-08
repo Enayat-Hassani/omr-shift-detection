@@ -6,16 +6,26 @@ Prior concentration = how many prior items of evidence the board claims
 to have for the candidate's competence. Higher = a more forceful claim.
 
     kappa  log10 BF   post H1     MC p  BF gate  post gate  MC gate  segments     VERDICT
-       10     -1.75    0.0003   0.8914     fail       fail     fail      fail    rejected
-       30     -1.60    0.0005   0.8914     fail       fail     fail      fail    rejected
-       60     -1.11    0.0014   0.8914     fail       fail     fail      fail    rejected
-      120     -0.21    0.0111   0.8914     fail       fail     fail      fail    rejected
-      250      0.80    0.1039   0.8914     fail       fail     fail      fail    rejected
-      500      1.56    0.4015   0.8914     fail       fail     fail      fail    rejected
-     1000      2.08    0.6877   0.8914     PASS       fail     fail      fail    rejected
-     5000      2.81    0.9222   0.8914     PASS       fail     fail      fail    rejected
+       10      0.12    0.0237   0.8914     fail       fail     fail      fail    rejected
+       30      0.33    0.0376   0.8914     fail       fail     fail      fail    rejected
+       60      0.96    0.1431   0.8914     fail       fail     fail      fail    rejected
+      120      2.04    0.6675   0.8914     PASS       fail     fail      fail    rejected
+      250      3.30    0.9735   0.8914     PASS       PASS     fail      fail    rejected
+      500      4.32    0.9974   0.8914     PASS       PASS     fail      fail    rejected
+     1000      5.00    0.9995   0.8914     PASS       PASS     fail      fail    rejected
+     5000      6.02    0.9999   0.8914     PASS       PASS     fail      fail    rejected
 
-  The Bayes-factor gate CAN be bought: it flips at concentration 1000.
+  The Bayes-factor gate CAN be bought: it flips at concentration 120.
   The Monte-Carlo gate held in 8/8 conditions. It uses NO
   ability model, so it cannot be moved by asserting competence. That is why
   it is the load-bearing gate and must be governed most tightly.
+
+------------------------------------------------------------------------------
+PROVENANCE
+------------------------------------------------------------------------------
+  code fingerprint : 303b77849003  (over 2 loaded modules)
+  commit           : 644ac3d
+  python           : 3.14.3    numpy: 2.4.4
+  Regenerating from unchanged code reproduces this file exactly;
+  an empty `git diff` is the check. See REPRODUCE.md.
+------------------------------------------------------------------------------

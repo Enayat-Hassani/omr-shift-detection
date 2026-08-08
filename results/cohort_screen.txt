@@ -1,0 +1,47 @@
+==========================================================================
+                              COHORT SCREEN                               
+==========================================================================
+  sheets screened              : 4000
+  target false discovery rate  : 0.05
+  Benjamini-Hochberg threshold : 0.000100
+  sheets flagged               : 22
+  expected false discoveries   : 1.10
+
+  trigger rate                 : 0.0055
+  expected at the base rate    : 0.0020
+  trigger rate is within the expected range
+==========================================================================
+
+  permutation draws per sheet  : 79,999  (derived from the cohort size)
+  questions per paper          : 46
+--------------------------------------------------------------------------
+AGAINST THE KNOWN TRUTH  --  available here, not on a real sitting
+--------------------------------------------------------------------------
+  sheets with a genuine skip   : 61  (0.0152 of the cohort)
+  error-free sheets            : 3939
+
+  flagged by the per-sheet gate alone : 33   of which wrong: 0
+  flagged after the cohort screen     : 22   of which wrong: 0
+
+  observed false discovery rate : 0.0000
+  bound published in advance    : 0.0500
+  observed within the bound     : yes
+
+  false positives on error-free sheets : 0 of 3939
+  95% upper bound (Clopper-Pearson)    : 0.00076
+
+  The cohort layer can only remove sheets, never add them, so
+  screening a sitting is never more permissive than adjudicating
+  one sheet at a time.
+==========================================================================
+
+------------------------------------------------------------------------------
+PROVENANCE
+------------------------------------------------------------------------------
+  code fingerprint : bd6690fa09fa  (over 3 loaded modules)
+  commit           : 644ac3d  (SOURCE HAD UNCOMMITTED CHANGES)
+  python           : 3.14.3    numpy: 2.4.4
+  parameters       : base_rate=0.018, length=46, q=0.05, sheets=4000
+  Regenerating from unchanged code reproduces this file exactly;
+  an empty `git diff` is the check. See REPRODUCE.md.
+------------------------------------------------------------------------------

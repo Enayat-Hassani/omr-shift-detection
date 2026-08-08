@@ -76,6 +76,7 @@ for _p in (_HERE, _ROOT, os.path.join(_ROOT, "analysis")):
     if _p not in sys.path:
         sys.path.insert(0, _p)
 
+import provenance  # noqa: E402
 from error_families import binom_sf, sidak   # noqa: E402
 
 OPTIONS = ("A", "B", "C", "D")
@@ -471,5 +472,4 @@ if __name__ == "__main__":
     text = report(key, marks)
     print(text)
     here = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "results")
-    with open(os.path.join(here, "latent_structure.txt"), "w") as f:
-        f.write(text)
+    provenance.write_text(os.path.join(here, "latent_structure.txt"), text)

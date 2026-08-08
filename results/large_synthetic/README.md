@@ -1,6 +1,6 @@
 # Large Synthetic Shift-Detection Benchmark  (results)
 
-**Run**: 2026-08-07 14:23:41 +08  ·  mode `full`  ·  seed 20260804
+**Run**: mode `full`  ·  seed 20260804
 
 ## Synthetic-only, NOT a deployment calibration
 

@@ -31,13 +31,13 @@ Sheet length 20. Single-row skips only. All sheets SYNTHETIC.
   Marks lost to the skips in total: 1220
 
     alpha       profile   detected   marks back  recovery   lost  misloc  min block
-    0.001  conservative   23/150     281/1220      23.0%      0       0         11
-   0.0025                 32/150     362/1220      29.7%      0       0         11
-    0.005                 36/150     401/1220      32.9%      0       0         10
-     0.01      balanced   41/150     426/1220      34.9%      0       0         10
-    0.025                 46/150     465/1220      38.1%      0       0          9
-     0.05     sensitive   52/150     503/1220      41.2%      0       0          8
-      0.1                 57/150     509/1220      41.7%      0       0          7
+    0.001  conservative   23/150     280/1220      23.0%      0       0         11
+   0.0025                 32/150     364/1220      29.8%      0       0         11
+    0.005                 37/150     409/1220      33.5%      0       0         10
+     0.01      balanced   46/150     469/1220      38.4%      0       0          9
+    0.025                 53/150     510/1220      41.8%      0       0          9
+     0.05     sensitive   63/150     558/1220      45.7%      0       0          8
+      0.1                 77/150     596/1220      48.9%      0       0          6
 
   min block is the fewest CORRECT marks in a displaced block that
   the level accepted -- what it can physically see. No level makes a
@@ -45,19 +45,19 @@ Sheet length 20. Single-row skips only. All sheets SYNTHETIC.
 
     alpha   t=0.55   t=0.65   t=0.75   t=0.85   t=0.95
     0.001     1/30     0/30     3/30     8/30    11/30
-     0.01     1/30     2/30     7/30    13/30    18/30
-     0.05     1/30     2/30    11/30    15/30    23/30
+     0.01     1/30     6/30     7/30    14/30    18/30
+     0.05     2/30     7/30    12/30    19/30    23/30
   detection by ability. Weak candidates are not recovered at any level.
 
 ------------------------------------------------------------------------------
 3. WHICH GATE BINDS  --  at the default level
 ------------------------------------------------------------------------------
-  Rejections with exactly one failing gate: 24
-    sole failing gate was monte_carlo          19
-    sole failing gate was bayes_factor          5
+  Rejections with exactly one failing gate: 49
+    sole failing gate was monte_carlo          49
+    sole failing gate was bayes_factor          0
     sole failing gate was segment_coherence     0
     sole failing gate was non_trivial           0
-  Smallest displaced block on any accepted sheet: 7 items
+  Smallest displaced block on any accepted sheet: 6 items
   Configured min_segment_length: 5
 
 ------------------------------------------------------------------------------
@@ -79,3 +79,14 @@ Sheet length 20. Single-row skips only. All sheets SYNTHETIC.
 Zero observed is not zero risk. Every sheet above is synthetic, and
 no confirmed historical case exists to calibrate against.
 ==============================================================================
+
+------------------------------------------------------------------------------
+PROVENANCE
+------------------------------------------------------------------------------
+  code fingerprint : fe4ad47ccbec  (over 3 loaded modules)
+  commit           : 644ac3d
+  python           : 3.14.3    numpy: 2.4.4
+  parameters       : certify=1500, clean=300, shift=150
+  Regenerating from unchanged code reproduces this file exactly;
+  an empty `git diff` is the check. See REPRODUCE.md.
+------------------------------------------------------------------------------

@@ -1,73 +1,27 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
-================================================================================
- ITEM-WEIGHTED COHERENCE SCAN
- Putting psychometrics into the gate that actually binds
-================================================================================
+Item-weighted coherence scan for shift detection.
 
-WHY
----
-Two measured facts force this design:
+WHY THIS EXISTS
+Previous results showed that IRT emissions inside the Bayes-factor gate did not
+improve detection, because the Monte-Carlo coherence gate remains the binding
+constraint. This module integrates psychometrics directly into the coherence
+statistic to make the binding gate more accurate.
 
-  C3  The Monte-Carlo coherence gate is the BINDING constraint. It is the only
-      gate that holds when every other one is bought, and it uses no ability
-      model at all.
+HOW IT WORKS
+- Replaces simple match counts with item log-likelihood ratios.
+- Uses candidate response marginals in the null hypothesis to eliminate response bias.
+- Applies IRT in the alternative hypothesis to weight questions by item parameters.
 
-  F10 IRT emissions produced no measurable improvement (26/40 vs 25/40). Not an
-      implementation failure -- Rasch calibration recovered item difficulty at
-      r = +0.992. The emission model feeds the Bayes-factor gate, which is not
-      the bottleneck.
-
-Conclusion: item information has to go into the coherence statistic itself, or
-it cannot affect the decision.
-
-THE STATISTIC
--------------
-The plain scan counts matches inside a candidate displaced block and tests that
-count against chance. This replaces the count with a sum of log-likelihood
-ratios:
-
-    T_w = max over displacement d != 0, and over windows W with |W| >= L_min, of
-
-              SUM_{q in W}  log [ P(observation | q aligned to row q+d)
-                                / P(observation | that row is unrelated to q) ]
-
-    match     ->  log[ P_correct(q) / p_hat(key_q) ]
-    mismatch  ->  log[ ((1 - P_correct(q)) / (C-1)) / p_hat(mark) ]
-
-Two sources of item information enter, and they are different things:
-
-  1. THE NULL uses the candidate's own response marginals p_hat, not 1/C. An
-     item whose key is a letter this candidate marks 35% of the time aligns by
-     chance 35% of the time, not 25%. This prices out response bias, which the
-     unweighted scan cannot see at all.
-
-  2. THE ALTERNATIVE uses IRT: P_correct(q) = c + (1-c) sigma(a(theta - b)).
-
-DIRECTION OF THE WEIGHTING -- COUNTER-INTUITIVE, AND WORTH STATING
-------------------------------------------------------------------
-The obvious guess is that a match on a HARD item should count for more. That is
-backwards. Under a displaced alignment the mark came from a different question,
-so difficulty is irrelevant to the null; it enters only through the alternative:
-
-    very easy item (p=0.95) : match +1.34 nats,  MISMATCH -2.71 nats
-    very hard item (p=0.28) : match +0.11 nats,  mismatch -0.04 nats
-
-The informative items are the EASY ones, and the informative event is a
-MISMATCH. A candidate failing an item they should have found easy is strong
-evidence that something mechanical went wrong. Failing a hard item says almost
-nothing. Hard items are nearly uninformative in both directions.
-
-CALIBRATION
------------
-T_w has no closed-form null, so it is calibrated by the same three Monte-Carlo
-nulls as the unweighted statistic, recomputed under the same weighting. The
-maximum over (displacement, window) is taken inside every replicate, so
-multiplicity is handled exactly. Nothing about the fairness architecture
-changes: this replaces one statistic with another inside the existing gate.
-================================================================================
+KEY BEHAVIOR
+- Easy items carry high weight; hard items carry low weight.
+- Mismatches on easy items generate the strongest signal for shift detection.
+- Monte-Carlo null distributions calibrate significance without altering the core safety framework.
 """
+
 
 from __future__ import annotations
 

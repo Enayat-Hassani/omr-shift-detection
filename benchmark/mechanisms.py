@@ -93,6 +93,7 @@ for _p in (_HERE, _ROOT, os.path.join(_ROOT, "analysis")):
     if _p not in sys.path:
         sys.path.insert(0, _p)
 
+import provenance  # noqa: E402
 from omrbench import (  # noqa: E402
     OPTIONS, Detector, ErrorInjector, GroundTruth, GatedPairHMMDetector,
     FixedCostDPDetector, BruteForceShiftDetector, LCSDetector, NoOpDetector,
@@ -339,6 +340,6 @@ if __name__ == "__main__":
     print()
     print(text)
     here = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "results")
-    with open(os.path.join(here, "benchmark_mechanisms.txt"), "w") as f:
-        f.write(text)
+    provenance.write_text(os.path.join(here, "benchmark_mechanisms.txt"), text,
+                          sheets_per_cell=args.n)
     print("wrote report_realistic_errors.txt")

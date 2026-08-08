@@ -82,9 +82,11 @@ for _p in (_HERE, _ROOT, os.path.join(_ROOT, "analysis")):
     if _p not in sys.path:
         sys.path.insert(0, _p)
 
+import provenance  # noqa: E402
 from omr_shift import (  # noqa: E402
-    AdjudicationConfig, Adjudicator, BandedPairHMM, CoherenceScanStatistic,
-    EvidenceEngine, ResponseSheet, ScoringModel, SegmentAnalyzer,
+    AdjudicationConfig, Adjudicator, Alignment, BandedPairHMM,
+    CoherenceScanStatistic, EvidenceEngine, ResponseSheet, ScoringModel,
+    SegmentAnalyzer,
     clopper_pearson_upper,
 )
 
@@ -353,12 +355,15 @@ class RowSkipInjector(ErrorInjector):
     def inject(self, rng, key, marks):
         n = len(key)
         at = rng.randint(6, n - 12)
-        obs = marks[:at] + [rng.choice(OPTIONS) for _ in range(self.mag)] + marks[at:]
+        # A skipped row is left empty. Filling it at random modelled a
+        # different event than the controls certify; see large_synthetic.
+        obs = marks[:at] + [None for _ in range(self.mag)] + marks[at:]
         obs = obs[:n]
         align = {q: (q if q < at else q + self.mag) for q in range(n)}
         align = {q: r for q, r in align.items() if r < n}
-        true_s = sum(1 for q, r in align.items() if obs[r] == key[q])
-        obs_s = sum(1 for q in range(n) if obs[q] == key[q])
+        true_s = sum(1 for q, r in align.items()
+                     if obs[r] is not None and obs[r] == key[q])
+        obs_s = sum(1 for q in range(n) if obs[q] is not None and obs[q] == key[q])
         return obs, GroundTruth(True, [(at + 1, self.mag)], align, true_s, obs_s, "", self.name)
 
 
@@ -377,8 +382,9 @@ class DoubleShiftInjector(ErrorInjector):
             r = q + (0 if q < a1 else (1 if q < a2 else 2))
             if r < n:
                 align[q] = r
-        true_s = sum(1 for q, r in align.items() if obs[r] == key[q])
-        obs_s = sum(1 for q in range(n) if obs[q] == key[q])
+        true_s = sum(1 for q, r in align.items()
+                     if obs[r] is not None and obs[r] == key[q])
+        obs_s = sum(1 for q in range(n) if obs[q] is not None and obs[q] == key[q])
         return obs, GroundTruth(True, [(a1 + 1, 1), (a2 + 1, 1)], align, true_s, obs_s, "", self.name)
 
 
@@ -475,24 +481,114 @@ class FixedCostDPDetector(Detector):
     no probabilistic semantics, so no defensible confidence."""
     name = "fixed-cost DP alignment"
 
-    def __init__(self, gap_open: float = 4.0, max_d: int = 3):
-        self.go, self.D = gap_open, max_d
+    def __init__(self, gap_open: float = 4.0, gap_extend: float = 1.0,
+                 match: float = 1.0, mismatch: float = -1.0, max_d: int = 3,
+                 accept_gain: float = 3.0):
+        self.go, self.ge = gap_open, gap_extend
+        self.match, self.mismatch = match, mismatch
+        self.D, self.accept_gain = max_d, accept_gain
+
+    def _align(self, key, marks):
+        """Gotoh affine-gap alignment over the banded lattice, constant costs.
+
+        No probabilistic interpretation: the numbers below are chosen, and the
+        output is an unnormalised score. That is the point of this baseline --
+        it is structurally correct and has no confidence to report.
+        """
+        N, M = len(key), len(marks)
+        NEG = float("-inf")
+        # (score, backpointer) per state; states are M(atch), X(gap in rows),
+        # Y(gap in questions).
+        prev = {}
+        cur = {}
+        best_end, best_score = None, NEG
+        traceback = {}
+
+        def in_band(q, r):
+            return abs(q - r) <= self.D and 0 <= r <= M
+
+        init = {}
+        init[(0, "M")] = 0.0
+        prev = init
+        for q in range(1, N + 1):
+            cur = {}
+            for r in range(max(0, q - self.D), min(M, q + self.D) + 1):
+                sub = (self.match if (r >= 1 and marks[r - 1] is not None
+                                      and marks[r - 1] == key[q - 1])
+                       else self.mismatch)
+                cands = []
+                for st in ("M", "X", "Y"):
+                    v = prev.get((r - 1, st))
+                    if v is not None and r >= 1:
+                        cands.append((v + sub, st))
+                if cands:
+                    v, bp = max(cands)
+                    cur[(r, "M")] = v
+                    traceback[(q, r, "M")] = bp
+                # X: question q consumes no row
+                cands = []
+                for st, pen in (("M", self.go), ("X", self.ge), ("Y", self.go)):
+                    v = prev.get((r, st))
+                    if v is not None:
+                        cands.append((v - pen, st))
+                if cands:
+                    v, bp = max(cands)
+                    cur[(r, "X")] = v
+                    traceback[(q, r, "X")] = bp
+                # Y: row r consumes no question
+                cands = []
+                for st, pen in (("M", self.go), ("X", self.go), ("Y", self.ge)):
+                    v = cur.get((r - 1, st))
+                    if v is not None and r >= 1:
+                        cands.append((v - pen, st))
+                if cands:
+                    v, bp = max(cands)
+                    cur[(r, "Y")] = v
+                    traceback[(q, r, "Y")] = bp
+            prev = cur
+
+        # Best terminal cell, then walk the pointers back for the pairing.
+        end = max(prev.items(), key=lambda kv: kv[1], default=(None, NEG))
+        if end[0] is None:
+            return {q: q for q in range(N)}
+        r, st = end[0]
+        pairs = {}
+        q = N
+        while q > 0:
+            if st == "M":
+                pairs[q - 1] = r - 1
+                nxt = traceback.get((q, r, "M"), "M")
+                q, r, st = q - 1, r - 1, nxt
+            elif st == "X":
+                nxt = traceback.get((q, r, "X"), "M")
+                q, st = q - 1, nxt
+            else:
+                nxt = traceback.get((q, r, "Y"), "M")
+                r, st = r - 1, nxt
+            if r < 0:
+                break
+        return {q_: r_ for q_, r_ in pairs.items() if 0 <= r_ < M}
 
     def decide(self, key, marks):
+        pairs = self._align(key, marks)
+        base = sum(1 for i in range(len(key))
+                   if marks[i] is not None and marks[i] == key[i])
+        got = self._score(key, marks, pairs)
+        acc = (got - base) >= self.accept_gain
         cfg = replace(AdjudicationConfig(), max_displacement=self.D)
         sheet = ResponseSheet(tuple(key), tuple(marks))
-        model = ScoringModel(sheet, cfg)
-        hmm = BandedPairHMM(model, 0.75)
-        al = hmm.viterbi()
-        base = sum(1 for i in range(len(key)) if marks[i] == key[i])
-        got = self._score(key, marks, al.pairs)
-        acc = got - base >= 3
+        al = Alignment(pairs,
+                       blank_questions=[q for q in range(len(key)) if q not in pairs],
+                       orphan_rows=[r for r in range(len(marks))
+                                    if r not in set(pairs.values())],
+                       log_score=float(got))
         segs = SegmentAnalyzer(sheet, cfg).segments(al)
         locs = [{"at_question": b.q_start + 1, "offset_before": a.offset,
                  "offset_after": b.offset} for a, b in zip(segs, segs[1:])] if acc else []
-        return Decision(acc, locs, None, {"viterbi_gain": got - base},
-                        "alignment DP with fixed gap costs", al.pairs if acc else
-                        {q: q for q in range(len(key))}, got if acc else base)
+        return Decision(acc, locs, None, {"alignment_gain": got - base},
+                        "alignment DP with fixed gap costs",
+                        pairs if acc else {q: q for q in range(len(key))},
+                        got if acc else base)
 
 
 class GatedPairHMMDetector(Detector):
@@ -506,10 +602,15 @@ class GatedPairHMMDetector(Detector):
 
     def decide(self, key, marks):
         sheet = ResponseSheet(tuple(key), tuple(marks))
-        # early_stop is EXACT here: the benchmark only needs the accept/reject
-        # decision, and remaining draws provably cannot change it.
+        # early_stop and fast are both EXACT here: the benchmark only needs the
+        # accept/reject decision and the awarded marks. early_stop abandons a
+        # null once the remaining draws provably cannot change it; fast skips
+        # calibration entirely on sheets whose MAP registration is the identity,
+        # which have already failed a gate. Neither can alter a verdict, and the
+        # only cost is that a rejected sheet carries no coherence statistic.
         adj = Adjudicator(sheet, self.cfg).run(n_permutations=self.n_perm,
-                                               verbose=False, early_stop=True)
+                                               verbose=False, early_stop=True,
+                                               fast=True)
         locs = [{"at_question": c["at_question"], "offset_before": c["offset_before"],
                  "offset_after": c["offset_after"], "mechanism": c["mechanism"]}
                 for c in adj.change_points] if adj.accepted else []
@@ -520,7 +621,9 @@ class GatedPairHMMDetector(Detector):
             adj.accepted, locs, adj.evidence["posterior_h1"],
             {"log10_bayes_factor": adj.evidence["log10_bayes_factor"],
              "monte_carlo_p": adj.calibration["p_value"],
-             "coherence_statistic": adj.calibration["observed_statistic"]},
+             "coherence_statistic": (
+                 adj.calibration["observed_statistic"]
+                 if adj.calibration.get("computed", True) else None)},
             expl, adj.awarded_map, adj.adjudicated_score)
 
 
@@ -917,12 +1020,13 @@ def main() -> None:
     print(text)
 
     here = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "results")
-    with open(os.path.join(here, "benchmark.txt"), "w") as f:
-        f.write(text)
-    with open(os.path.join(here, "benchmark.json"), "w") as f:
-        json.dump([{**r.__dict__, "fpr": r.fpr, "power": r.power,
-                    "median_localisation": r.median_localisation} for r in results],
-                  f, indent=2, default=str)
+    provenance.write_text(os.path.join(here, "benchmark.txt"), text,
+                          sheets_per_cell=n, seed=bench.seed)
+    provenance.write_json(
+        os.path.join(here, "benchmark.json"),
+        [{**r.__dict__, "fpr": r.fpr, "power": r.power,
+          "median_localisation": r.median_localisation} for r in results],
+        sheets_per_cell=n, seed=bench.seed)
     fig = render_figure(results, DETECTOR_ORDER if "DETECTOR_ORDER" in globals()
                         else sorted({r.detector for r in results}), here)
     print(f"\nwrote benchmark.txt and benchmark.json"

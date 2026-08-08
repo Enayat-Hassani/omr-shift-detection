@@ -62,7 +62,18 @@ from __future__ import annotations
 
 import itertools
 import math
+import os
 import random
+import sys
+
+# At module level, not under __main__: the imports below run on import as well
+# as on execution, and this file is both a script and a library for
+# latent_structure.py. Bootstrapping only under __main__ left the standalone
+# command in REPRODUCE.md failing on its own imports.
+_HERE = os.path.dirname(os.path.abspath(__file__))
+for _p in (_HERE, os.path.dirname(_HERE)):
+    if _p not in sys.path:
+        sys.path.insert(0, _p)
 from dataclasses import dataclass
 from typing import Dict, List, Optional, Sequence, Tuple
 
@@ -96,13 +107,10 @@ class HypothesisResult:
 # ==============================================================================
 
 
-def binom_sf(k: int, n: int, p: float) -> float:
-    """P(X >= k), X ~ Binomial(n, p). Exact."""
-    if k <= 0:
-        return 1.0
-    if k > n:
-        return 0.0
-    return min(1.0, sum(math.comb(n, i) * p ** i * (1 - p) ** (n - i) for i in range(k, n + 1)))
+# Imported rather than reimplemented: a second copy drifted from the first and
+# kept the overflow the log-space version fixes.
+import provenance  # noqa: E402
+from omr_shift import binom_sf  # noqa: E402,F401
 
 
 def sidak(p: float, m: int) -> float:
@@ -427,11 +435,7 @@ def full_report(key, marks, options=("A", "B", "C", "D")) -> str:
 
 
 if __name__ == "__main__":
-    import os, sys
-    _H = os.path.dirname(os.path.abspath(__file__))
-    for _p in (_H, os.path.dirname(_H)):
-        if _p not in sys.path:
-            sys.path.insert(0, _p)
+    _H = _HERE
     from omr_shift import load_case_records
 
     _rec = load_case_records()
@@ -440,5 +444,4 @@ if __name__ == "__main__":
     text = full_report(key, marks)
     print(text)
     _out = os.path.join(os.path.dirname(_H), "results", "error_families.txt")
-    with open(_out, "w") as f:
-        f.write(text)
+    provenance.write_text(_out, text)

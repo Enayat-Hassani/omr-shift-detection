@@ -11,29 +11,28 @@ mode        : full
 master seed : 20260804
 sheets/cell : metrics=8  sweep=8
 permutations: reference MC nulls (metrics)
-elapsed     : 7583.0s
 
 -- OVERALL (metrics corpus, event counts shown alongside rates) --
-  gated        n=  9984  TP=  578 TPwrongloc= 302 FP=   0 FN=5264 TN= 3840
-              power=0.0941  fpr=0.0000  (CP95 upper=0.0007)  recovery=0.2880  unearned=2835
-              brier=n/a  mse=n/a  saved=29820/103536 marks at stake
-  bruteforce   n=  9984  TP=  464 TPwrongloc=1589 FP= 519 FN=4091 TN= 3321
-              power=0.0755  fpr=0.1352  (CP95 upper=0.1445)  recovery=0.5577  unearned=11235
-              brier=n/a  mse=n/a  saved=57746/103536 marks at stake
-  lcs          n=  9984  TP=    0 TPwrongloc=5347 FP=3188 FN= 797 TN=  652
-              power=0.0000  fpr=0.8302  (CP95 upper=0.8399)  recovery=0.8979  unearned=141684
-              brier=n/a  mse=n/a  saved=92968/103536 marks at stake
-  fixedcost    n=  9984  TP=  968 TPwrongloc=1166 FP= 625 FN=4010 TN= 3215
-              power=0.1576  fpr=0.1628  (CP95 upper=0.1728)  recovery=0.4220  unearned=19975
-              brier=n/a  mse=n/a  saved=43690/103536 marks at stake
+  gated        n=  9984  TP=  688 TPwrongloc= 207 FP=   0 FN=5249 TN= 3840
+              power=0.1120  fpr=0.0000  (CP95 upper=0.0007)  recovery=0.2791  unearned=2703
+              brier=0.2092  mse=0.4832  saved=29036/104024 marks at stake
+  bruteforce   n=  9984  TP=  465 TPwrongloc=1581 FP= 520 FN=4098 TN= 3320
+              power=0.0757  fpr=0.1354  (CP95 upper=0.1448)  recovery=0.5553  unearned=11065
+              brier=0.4043  mse=0.1269  saved=57769/104024 marks at stake
+  lcs          n=  9984  TP=    0 TPwrongloc=5344 FP=3201 FN= 800 TN=  639
+              power=0.0000  fpr=0.8336  (CP95 upper=0.8432)  recovery=0.8984  unearned=141249
+              brier=n/a  mse=n/a  saved=93456/104024 marks at stake
+  fixedcost    n=  9984  TP= 1124 TPwrongloc=1309 FP=1028 FN=3711 TN= 2812
+              power=0.1829  fpr=0.2677  (CP95 upper=0.2796)  recovery=0.4255  unearned=29940
+              brier=n/a  mse=n/a  saved=44264/104024 marks at stake
   noop         n=  9984  TP=    0 TPwrongloc=   0 FP=   0 FN=6144 TN= 3840
-              power=0.0000  fpr=0.0000  (CP95 upper=0.0007)  recovery=0.0000  unearned=2793
-              brier=0.6154  mse=0.0000  saved=0/103536 marks at stake
+              power=0.0000  fpr=0.0000  (CP95 upper=0.0007)  recovery=0.0000  unearned=2665
+              brier=0.6154  mse=0.0000  saved=0/104024 marks at stake
 
 -- THRESHOLD SWEEP (DISJOINT corpus; safety/recovery trade-offs) --
-  conservative       fpr=0.0000 (cp95 0.0206)  power=0.1611  extra/err-sheet=4.9390  recovery=0.2931
-  balanced           fpr=0.0000 (cp95 0.0206)  power=0.1722  extra/err-sheet=5.1030  recovery=0.3028
-  sensitive          fpr=0.0000 (cp95 0.0206)  power=0.1861  extra/err-sheet=5.3390  recovery=0.3168
+  conservative       fpr=0.0000 (cp95 0.0206)  power=0.1778  extra/err-sheet=4.6860  recovery=0.2765
+  balanced           fpr=0.0000 (cp95 0.0206)  power=0.1986  extra/err-sheet=4.8680  recovery=0.2872
+  sensitive          fpr=0.0000 (cp95 0.0206)  power=0.2278  extra/err-sheet=5.1140  recovery=0.3017
 
 The sweep is presented as policy trade-offs, NOT as tuning then
 reporting performance.  Default = out-of-the-box AdjudicationConfig.
@@ -42,3 +41,14 @@ CP 95% bounds: exact Clopper-Pearson per cell (n<=200); Wilson
 approximation for the pooled overall bound (large n).
 
 Honest failure cases recorded in failure_cases.json : 60
+
+------------------------------------------------------------------------------
+PROVENANCE
+------------------------------------------------------------------------------
+  code fingerprint : 88dc122e5c19  (over 4 loaded modules)
+  commit           : 644ac3d
+  python           : 3.14.3    numpy: 2.4.4
+  parameters       : mode=full, perm=1100, seed=20260804
+  Regenerating from unchanged code reproduces this file exactly;
+  an empty `git diff` is the check. See REPRODUCE.md.
+------------------------------------------------------------------------------

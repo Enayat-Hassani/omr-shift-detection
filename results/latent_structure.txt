@@ -54,10 +54,20 @@ answers incorrect? Five independent lenses, sharing few assumptions.
 ----------------------------------------------------------------------------
   CUSUM                    -> Q11
   binary segmentation      -> Q12
-  pair-HMM posterior       -> no break point
+  pair-HMM posterior       -> Q15
   coherence scan           -> Q31
   spread across methods    : 20 questions
-  methods within +/-3 of the median : 2/3
+  methods within +/-3 of the median : 2/4
   A single flagged break point is noise -- a maximum always exists.
   Agreement between methods built on different principles is evidence.
 ============================================================================
+
+------------------------------------------------------------------------------
+PROVENANCE
+------------------------------------------------------------------------------
+  code fingerprint : 890b3f85c259  (over 6 loaded modules)
+  commit           : 644ac3d
+  python           : 3.14.3    numpy: 2.4.4
+  Regenerating from unchanged code reproduces this file exactly;
+  an empty `git diff` is the check. See REPRODUCE.md.
+------------------------------------------------------------------------------

@@ -4,7 +4,7 @@ Optical mark recognition (OMR) produces two sequences: an answer key indexed by 
 
 This repository contains a detector for registration errors, two synthetic evaluation benchmarks, and audit documentation. The work began with the analysis of a disputed examination sheet and expanded into a benchmark for evaluating registration error detectors.
 
-> **Status:** Research implementation. Validated on synthetic corpora. Not validated for operational deployment or cohort screening.
+> **Status:** Research implementation. Validated on synthetic corpora, not for operational deployment. Cohort screening with false discovery rate control is implemented and measured on synthetic sittings; it requires a paper long enough to clear the multiple-comparisons threshold, and REPORT.md section 6.3 gives the arithmetic.
 
 ---
 
@@ -14,8 +14,8 @@ This repository contains a detector for registration errors, two synthetic evalu
 * **5 acceptance criteria**, all required: Bayes factor ≥ 100, posterior ≥ 0.95, Monte Carlo p ≤ 0.01 against the worst of three nulls, every displaced segment ≥ 5 items and above chance at p ≤ 0.01, and a non-identity registration. Marks are then awarded per question where the item posterior exceeds 0.99, and questions that turn wrong are counted as losses.
 * **10,464 synthetic sheets** across two corpora with independent generators, both scoring all five detectors: 480 sheets over 10 behaviour models and 9 mechanisms, and 9,984 over 11 behaviour models and 18 mechanisms including scanner artefacts and adversarial sheets.
 * **Zero false positives observed on both corpora.** Bounds follow sample size: 22.1% per generator on corpus 1 (12 error-free sheets each), 0.07% on corpus 2 (3,840 pooled), 0.20% in the profile study (1,500). Zero observed is not zero risk; see Key Limitations for the condition that breaks it.
-* **28.8% to 41.2% recovery**, depending on corpus and profile, while awarding the same unearned marks as making no corrections at all (0.006 per sheet at the 1.8% base rate).
-* **0.20 s per sheet, from 1.56 s.** Batched permutation scanning and a precomputed binomial tail table removed roughly 700,000 scalar calls per adjudication. Output verified bit-identical, including with numpy absent.
+* **27.9% to 45.7% recovery**, depending on corpus and profile, while awarding the same unearned marks as making no corrections at all (0.005 per sheet at the 1.8% base rate).
+* **0.65 s to fully adjudicate a 46-question sheet** at 999 permutation draws against three nulls. Batched permutation scanning, a precomputed binomial tail table, a shared forward pass across the ability grid, and short-circuiting sheets whose best registration is the identity. Every optimisation is verified to leave verdicts and awarded marks unchanged; the arithmetic ones are bit-identical, including with numpy absent.
 
 ---
 
@@ -46,13 +46,13 @@ Five alignment models were measured across two synthetic corpora:
 
 | Alignment Model | Worst-case FPR | Unearned Marks (Raw) | Unearned Marks (1.8% Base Rate) | Recovery Rate |
 |---|---|---|---|---|
-| No correction (Baseline) | 0.00 | 0.24 | 0.006 | 0% |
+| No correction (Baseline) | 0.00 | 0.19 | 0.005 | 0% |
 | Global displacement scan | 0.42 | 0.47 | 0.239 | 31% |
-| Longest common subsequence | 1.00 | 4.26 | 3.689 | 100% |
-| Fixed-cost affine alignment | 0.75 | 1.08 | 0.555 | 94% |
-| **Gated Pair HMM** | **0.00** | **0.25** | **0.006** | **31%** |
+| Longest common subsequence | 1.00 | 4.21 | 3.688 | 100% |
+| Fixed-cost affine alignment | 1.00 | 1.46 | 1.084 | 99% |
+| **Gated Pair HMM** | **0.00** | **0.19** | **0.005** | **33%** |
 
-At the historical 1.8% base rate, the Gated Pair HMM matches the no-correction baseline on unearned marks (0.006 per sheet) while recovering 31% of lost marks.
+At the historical 1.8% base rate, the Gated Pair HMM matches the no-correction baseline on unearned marks (0.005 per sheet) while recovering 33% of lost marks.
 
 Worst-case FPR is the maximum across the ten generators, each measured on 12 error-free sheets. An observed 0.00 in a cell bounds that generator's rate below 22.1% at 95% confidence (Clopper-Pearson, exact) — 12 sheets is a weak bound, and the figures are reported per generator rather than pooled, because a pooled average hides the generator under which a method fails. Corpus 2 is where the false positive claim is actually bounded, on 3,840 error-free sheets. Zero observed is not zero risk. The raw unearned-marks column is a mean over benchmark cells holding three error sheets per error-free sheet, and is not a deployment expectation; the 1.8% column reweights it to the measured base rate.
 
@@ -64,13 +64,13 @@ All five detectors, scored on identical sheets, with false-positive rates over 3
 
 | Detector | False positives | FPR | Recovery | Unearned marks |
 |---|---|---|---|---|
-| No correction | 0 of 3,840 | 0.000 | 0% | 2,793 |
-| **Gated Pair HMM** | **0 of 3,840** | **0.000** | **28.8%** | **2,835** |
-| Global displacement scan | 519 | 0.135 | 55.8% | 11,235 |
-| Fixed-cost affine alignment | 625 | 0.163 | 42.2% | 19,975 |
-| Longest common subsequence | 3,188 | 0.830 | 89.8% | 141,684 |
+| No correction | 0 of 3,840 | 0.000 | 0% | 2,665 |
+| **Gated Pair HMM** | **0 of 3,840** | **0.000** | **27.9%** | **2,703** |
+| Global displacement scan | 520 | 0.135 | 55.5% | 11,065 |
+| Fixed-cost affine alignment | 1,028 | 0.268 | 42.5% | 29,940 |
+| Longest common subsequence | 3,201 | 0.834 | 89.8% | 141,249 |
 
-Making no correction already awards 2,793 unearned marks, because some sheets are contaminated before the detector sees them. The gated model's excess over that floor is **42 marks across 9,984 sheets**. Longest common subsequence accepts 83% of clean sheets and awards an excess of 138,891.
+Making no correction already awards 2,665 unearned marks, because some sheets are contaminated before the detector sees them. The gated model's excess over that floor is **38 marks across 9,984 sheets**. Longest common subsequence accepts 83% of clean sheets and awards an excess of 138,584.
 
 ---
 
@@ -81,10 +81,10 @@ Acceptance thresholds are exposed as three pre-calibrated operating profiles:
 | Profile | Threshold $\alpha$ | Mark Recovery | Detections (150 Skips) | Smallest Block Accepted |
 |---|---|---|---|---|
 | Conservative | 0.001 | 23.0% | 23 of 150 | 11 correct answers |
-| **Balanced (Default)** | **0.010** | **34.9%** | **41 of 150** | **10 correct answers** |
-| Sensitive | 0.050 | 41.2% | 52 of 150 | 8 correct answers |
+| **Balanced (Default)** | **0.010** | **38.4%** | **46 of 150** | **9 correct answers** |
+| Sensitive | 0.050 | 45.7% | 63 of 150 | 8 correct answers |
 
-`Balanced` is the default configuration. Across 300 error-free sheets, `Conservative` yielded no fewer false positives than `Balanced`, while recovering one-third fewer marks on genuine skips.
+`Balanced` is the default configuration. Across 300 error-free sheets, `Conservative` yielded no fewer false positives than `Balanced`, while recovering two-fifths fewer marks on genuine skips.
 
 ---
 
@@ -96,11 +96,11 @@ Audit of a candidate scoring 7 out of 46 in mathematics produced a Monte Carlo $
 
 ## Key Limitations
 
-* **Low overall recovery:** Mark recovery is ~29%. Overall detection power on Corpus 2 is 0.094; the detector stays silent on 9 out of 10 genuine shifts to protect against false positives.
-* **Mislocation rate:** 302 of 880 detections (34%) misidentified the change-point location, flagging the sheet without returning credit.
-* **Detection floor:** Requires a contiguous block of 8 to 11 correct marks at non-zero offset depending on profile, and 10 at the default. On a 20-question paper this is a large share of the sheet, so short exams are poorly served. Sheet designs that confine a slip to a small block make errors cheaper and simultaneously undetectable; REPORT.md section 11.1 gives the trade-off.
+* **Low overall recovery:** Mark recovery is 28% to 33% depending on corpus. Overall detection power on Corpus 2 is 0.112; the detector stays silent on roughly 9 out of 10 genuine shifts to protect against false positives.
+* **Mislocation rate:** 207 of 895 detections (23%) misidentified the change-point location, flagging the sheet without returning credit.
+* **Detection floor:** Requires a contiguous block of 8 to 11 correct marks at non-zero offset depending on profile, and 9 at the default. On a 20-question paper this is a large share of the sheet, so short exams are poorly served. Sheet designs that confine a slip to a small block make errors cheaper and simultaneously undetectable; REPORT.md section 11.1 gives the trade-off.
 * **Single-sheet evidence only:** A displaced block of correct answers is treated as a registration error regardless of how it arose. A candidate copying from a neighbour whose sheet was displaced produces identical evidence and can be accepted. Detecting copying is outside the scope of this tool.
-* **Synthetic validation:** All evaluation relies on synthetic corpora. Operational calibration requires confirmed historical cases. The closest prior work, Cook (2013), evaluated on approximately 40,000 real examinees and operates with false discovery rate control at cohort scale; this package does neither. REPORT.md section 3.7 sets out where the two agree and where this one comes off worse.
+* **Synthetic validation:** All evaluation relies on synthetic corpora. Operational calibration requires confirmed historical cases.
 
 ---
 

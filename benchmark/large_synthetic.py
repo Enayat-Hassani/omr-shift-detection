@@ -85,6 +85,7 @@ import matplotlib                         # noqa: E402
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt          # noqa: E402
 
+import provenance                          # noqa: E402
 from omr_shift import (                   # noqa: E402
     AdjudicationConfig, Adjudicator, ResponseSheet, clopper_pearson_upper,
 )
@@ -272,8 +273,16 @@ class Injection:
 
 
 def inj_single_jump(rng, key, content, options, at, mag, mech):
+    """A skipped bubble row leaves the row EMPTY, not filled at random.
+
+    The controls in benchmark/verify_corpus.py and the profile study both model
+    the skip as a blank; this used to fill the skipped rows with random options,
+    so the controls certified a slightly different event than the corpora
+    measured. Blank is the physically honest one: a candidate who skips a row
+    does not mark it.
+    """
     n = len(key)
-    rows = list(content[:at]) + [rng.choice(options) for _ in range(abs(mag))] + list(content[at:])
+    rows = list(content[:at]) + [None for _ in range(abs(mag))] + list(content[at:])
     rows = rows[:n]
     align = {}
     for q in range(n):
@@ -449,10 +458,19 @@ def inj_scanner_faint(rng, key, content, options, level):
 
 
 def inj_scanner_double(rng, key, content, options, level):
+    """Two bubbles filled on one row. The scanner cannot resolve which was
+    intended, so the row reads as a different option than the candidate meant.
+
+    This was previously identical to inj_scanner_faint -- both blanked the row --
+    so the corpus measured faint marks twice and claimed to cover double marks.
+    A double mark is not a blank: the row carries a symbol, and a wrong one.
+    """
     rows = list(content)
     idx = rng.sample(range(len(rows)), min(level, len(rows)))
     for i in idx:
-        rows[i] = None
+        intended = rows[i]
+        alternatives = [o for o in options if o != intended]
+        rows[i] = rng.choice(alternatives) if alternatives else intended
     align = {q: q for q in range(len(key))}
     return Injection(rows, False, [], align, f"scanner_double_{level}")
 
@@ -587,9 +605,12 @@ class ReferenceGated(Detector):
         try:
             sheet = ResponseSheet(tuple(key), tuple(marks), self.options)
             adj = Adjudicator(sheet, self.cfg).run(
-                n_permutations=self.n_perm, verbose=False, early_stop=True)
-        except Exception:
-            return Decision(False, [], None, {}, "adjudicator error",
+                n_permutations=self.n_perm, verbose=False, early_stop=True, fast=True)
+        except Exception as exc:
+            # The text, not just the fact. A run that silently converts crashes
+            # into clean verdicts cannot be audited afterwards.
+            return Decision(False, [], None, {"error": f"{type(exc).__name__}: {exc}"},
+                            f"adjudicator error: {type(exc).__name__}: {exc}",
                             {}, None)
         locs = [{"at_question": c.get("at_question"),
                  "offset_before": c.get("offset_before"),
@@ -697,12 +718,33 @@ def policy_cfg(name: str) -> AdjudicationConfig:
     return replace(AdjudicationConfig(), **_policy_kwargs(name))
 
 
+# A board does not know a candidate's true ability. It has their record on other
+# papers, which is an estimate with error on it. Handing the detector the exact
+# value the generator used overstates what it can do, which is why A2 reads the
+# detection figures as an upper bound.
+#
+# `observed_ability` simulates the record instead: PRIOR_ITEMS questions the
+# candidate also sat, scored, and the proportion correct taken as the estimate.
+# The error is binomial and shrinks as PRIOR_ITEMS grows, so the parameter says
+# plainly how much prior evidence a board is assumed to hold.
+
+PRIOR_ITEMS = 40
+
+
+def observed_ability(true_ability: float, cell_id: int, n_items: int = PRIOR_ITEMS) -> float:
+    """Ability as a board would have it: measured on other papers, with error."""
+    rng = random.Random(zlib.crc32(f"prior:{cell_id}:{true_ability}".encode()))
+    correct = sum(1 for _ in range(n_items) if rng.random() < true_ability)
+    # Laplace smoothing keeps the estimate inside the admissible band.
+    return (correct + 1) / (n_items + 2)
+
+
 def reference_for(ability: float, perm: int = 1100, policy: Optional[str] = None,
                   fast: bool = False, options: Sequence[str] = OPTIONS_4,
                   level: Optional[float] = None) -> ReferenceGated:
-    """Reference detector with the ability fixed to the candidate's true ability
-    (fair: the detector is not penalised for mis-assuming candidate ability) and
-    an optional policy override.  `fast` is for --quick smoke runs only.
+    """Reference detector. `ability` is what the detector is told, which the
+    caller derives from `observed_ability` rather than from the generator, so the
+    figures are not inflated by knowledge no board has.
 
     `level` overrides the acceptance level only, leaving every other threshold
     at its shipped value. That is what makes a before-and-after on the default
@@ -850,9 +892,16 @@ def run_corpus(cells, det_factory, det_name, seed, n, dataset, policy,
         for i, rng in enumerate(rngs):
             key, observed, inj = sheet_for(rng, cell["options"], cell["length"],
                                            cell["ability"], cell["mechanism"])
+            # A crash used to be silently recorded as a rejection: a true
+            # negative on a clean sheet, a false negative on an error sheet.
+            # The headline "0 false positives" would then be indistinguishable,
+            # from the record alone, from "the detector crashed". The error is
+            # carried into the row so a run can be audited for it.
+            error = ""
             try:
                 d = det.decide(key, observed)
-            except Exception:
+            except Exception as exc:
+                error = f"{type(exc).__name__}: {exc}"[:200]
                 d = Decision(False, [], None, {}, "harness error", None, None)
             accepted = bool(d.accepted)
             target = inj.has_shift
@@ -871,7 +920,10 @@ def run_corpus(cells, det_factory, det_name, seed, n, dataset, policy,
                 (float(conf) - (1.0 if target else 0.0)) ** 2
                 if not math.isnan(float(conf)) else float("nan")
             )
-            mse = float(conf) if not math.isnan(float(conf)) else float("nan")
+            # Mean squared posterior: a sharpness diagnostic, how far the
+            # detector commits away from zero. It was previously the raw
+            # posterior, which is a mean, not a mean square.
+            mse = float(conf) ** 2 if not math.isnan(float(conf)) else float("nan")
             naive = naive_score(key, observed)
             true_sc = sum(1 for q, r in inj.alignment.items()
                           if 0 <= r < len(observed) and observed[r] is not None
@@ -892,6 +944,7 @@ def run_corpus(cells, det_factory, det_name, seed, n, dataset, policy,
                 "true_score": true_sc, "final_score": final_score,
                 "at_stake": at_stake, "saved": recovered,
                 "withheld": withheld, "unearned": unearned,
+                "error": error,
             })
             # collect honest failure / near-miss cases (gated only)
             if failures is not None and det_name == "gated" \
@@ -920,7 +973,8 @@ def run_corpus(cells, det_factory, det_name, seed, n, dataset, policy,
 
 def _cell_detector(cell, det_name, perm, fast, level=None):
     if det_name == "gated":
-        return reference_for(cell["ability"], perm, fast=fast, level=level)
+        return reference_for(observed_ability(cell["ability"], cell["id"]),
+                             perm, fast=fast, level=level)
     return make_detector(det_name, None, perm)
 
 
@@ -936,7 +990,8 @@ def _run_batch(args):
         fac = (lambda c: _cell_detector(c, det_name, perm, fast, level))
         pol = "metrics"
     else:
-        fac = (lambda c: reference_for(c["ability"], perm, policy=policy))
+        fac = (lambda c: reference_for(observed_ability(c["ability"], c["id"]),
+                                       perm, policy=policy))
         pol = policy
     failures = []
     rows = run_corpus(cells, fac, det_name, seed, n, dataset, pol, failures)
@@ -968,8 +1023,15 @@ def aggregate(rows: List[dict]) -> List[dict]:
         recall_all = (tp_c + tp_w) / n_target if n_target else float("nan")
         fpr = fp / n_clean if n_clean else float("nan")
         fpr_ci = _cp_upper_safe(fp, n_clean) if n_clean else float("nan")
-        brier = sum(r["brier"] for r in rs) / n
-        mse = sum(r["mse"] for r in rs) / n
+        # Averaged over the sheets that carry a posterior at all. A detector
+        # that reports no confidence (the aligners) contributes no rows here,
+        # and one undefined row previously turned the whole cell into NaN.
+        scored = [r for r in rs if not math.isnan(r["brier"])]
+        n_scored = len(scored)
+        brier = (sum(r["brier"] for r in scored) / n_scored
+                 if n_scored else float("nan"))
+        mse = (sum(r["mse"] for r in scored) / n_scored
+               if n_scored else float("nan"))
         at_stake = sum(r["at_stake"] for r in rs)
         saved = sum(r["saved"] for r in rs if r["saved"] is not None)
         saved_n = sum(1 for r in rs if r["saved"] is not None)
@@ -983,7 +1045,8 @@ def aggregate(rows: List[dict]) -> List[dict]:
             "fp": fp, "fn": fn, "tn": tn, "power": round(power, 6),
             "recall_all": round(recall_all, 6), "fpr": round(fpr, 6),
             "fpr_ci_upper": round(fpr_ci, 6), "brier": round(brier, 6),
-            "mse": round(mse, 6), "recovery": round(recovery, 6),
+            "mse": round(mse, 6), "n_scored": n_scored,
+            "recovery": round(recovery, 6),
             "at_stake": at_stake, "saved": saved, "saved_sheets": saved_n,
             "unearned": unearned,
         })
@@ -1159,9 +1222,8 @@ def write_csv(path, rows: List[dict]):
     df.to_csv(path, index=False)
 
 
-def write_json(path, obj):
-    with open(path, "w") as f:
-        json.dump(obj, f, indent=2)
+def write_json(path, obj, **params):
+    provenance.write_json(path, obj, **params)
 
 
 def _fmt(x):
@@ -1178,13 +1240,20 @@ def build_summary(agg_metrics, agg_sweep, meta) -> Tuple[str, dict]:
         o = overall.setdefault(key, {"n": 0, "n_target": 0, "n_clean": 0,
                                      "tp_correct": 0, "tp_wrongloc": 0, "fp": 0,
                                      "fn": 0, "tn": 0, "brier_sum": 0.0,
-                                     "mse_sum": 0.0, "at_stake": 0, "saved": 0,
+                                     "mse_sum": 0.0, "n_scored": 0,
+                                     "at_stake": 0, "saved": 0,
                                      "unearned": 0})
         o["n"] += r["n"]; o["n_target"] += r["n_target"]
         o["n_clean"] += r["n_clean"]
         o["tp_correct"] += r["tp_correct"]; o["tp_wrongloc"] += r["tp_wrongloc"]
         o["fp"] += r["fp"]; o["fn"] += r["fn"]; o["tn"] += r["tn"]
-        o["brier_sum"] += r["brier"] * r["n"]; o["mse_sum"] += r["mse"] * r["n"]
+        # Weighted by the sheets that actually carry a posterior, so a cell
+        # with none contributes nothing rather than poisoning the pool.
+        ns = r.get("n_scored", 0)
+        if ns:
+            o["brier_sum"] += r["brier"] * ns
+            o["mse_sum"] += r["mse"] * ns
+            o["n_scored"] += ns
         o["at_stake"] += r["at_stake"]; o["saved"] += r["saved"]
         o["unearned"] += r["unearned"]
     def _summ(o):
@@ -1198,8 +1267,11 @@ def build_summary(agg_metrics, agg_sweep, meta) -> Tuple[str, dict]:
                 "fp": o["fp"], "fn": o["fn"], "tn": o["tn"],
                 "power": round(power, 4), "fpr": round(fpr, 4),
                 "fpr_ci_upper": round(fpr_ci, 4),
-                "brier": round(o["brier_sum"] / o["n"], 4),
-                "mse": round(o["mse_sum"] / o["n"], 4),
+                "brier": (round(o["brier_sum"] / o["n_scored"], 4)
+                          if o["n_scored"] else float("nan")),
+                "mse": (round(o["mse_sum"] / o["n_scored"], 4)
+                        if o["n_scored"] else float("nan")),
+                "n_scored": o["n_scored"],
                 "recovery": round(rec, 4), "saved": o["saved"],
                 "at_stake": o["at_stake"], "unearned": o["unearned"]}
     overall = {k: _summ(v) for k, v in overall.items()}
@@ -1240,7 +1312,6 @@ def build_summary(agg_metrics, agg_sweep, meta) -> Tuple[str, dict]:
     lines.append(f"master seed : {meta['seed']}")
     lines.append(f"sheets/cell : metrics={meta['n_metrics']}  sweep={meta['n_sweep']}")
     lines.append(f"permutations: reference MC nulls (metrics)")
-    lines.append(f"elapsed     : {meta['elapsed']:.1f}s")
     lines.append("")
     lines.append("-- OVERALL (metrics corpus, event counts shown alongside rates) --")
     for det, o in overall.items():
@@ -1381,15 +1452,17 @@ def main(argv=None):
 
     meta = {"mode": mode, "seed": args.seed, "n_metrics": n_metrics,
             "n_sweep": n_sweep, "perm": perm,
-            "elapsed": time.time() - t0,
-            "failures_collected": len(failures),
-            "generated": time.strftime("%Y-%m-%d %H:%M:%S %Z")}
+            "failures_collected": len(failures)}
     text, summary = build_summary(agg_metrics, agg_sweep, meta)
-    summary["generated"] = meta["generated"]
 
-    with open(os.path.join(outdir, "summary.txt"), "w") as f:
-        f.write(text + "\n")
-    write_json(os.path.join(outdir, "summary.json"), summary)
+    # No run duration and no wall-clock stamp in either file. Both are real
+    # facts about the run and neither is a result, and carrying them would put
+    # a diff in every regeneration -- which is exactly the signal the
+    # provenance block exists to keep meaningful.
+    stamp_params = dict(mode=mode, seed=meta["seed"], perm=meta["perm"])
+    provenance.write_text(os.path.join(outdir, "summary.txt"), text,
+                          **stamp_params)
+    write_json(os.path.join(outdir, "summary.json"), summary, **stamp_params)
 
     # ---- README ------------------------------------------------------------
     readme = build_readme(meta, summary, mode)
@@ -1398,13 +1471,13 @@ def main(argv=None):
 
     print()
     print(text)
-    print(f"\n[bench] done in {meta['elapsed']:.1f}s  -> {outdir}")
+    print(f"\n[bench] done in {time.time() - t0:.1f}s  -> {outdir}")
 
 
 def build_readme(meta, summary, mode):
     return f"""# Large Synthetic Shift-Detection Benchmark  (results)
 
-**Run**: {meta['generated']}  ·  mode `{mode}`  ·  seed {meta['seed']}
+**Run**: mode `{mode}`  ·  seed {meta['seed']}
 
 ## Synthetic-only, NOT a deployment calibration
 

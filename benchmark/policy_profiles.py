@@ -39,6 +39,7 @@ from typing import Dict, List, Optional, Sequence
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+import provenance  # noqa: E402
 from omr_shift import (  # noqa: E402
     AdjudicationConfig,
     Adjudicator,
@@ -384,8 +385,8 @@ def main() -> None:
     print(text)
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     out = os.path.join(root, "results", "policy_profiles.txt")
-    with open(out, "w") as fh:
-        fh.write(text + "\n")
+    provenance.write_text(out, text, clean=args.clean, shift=args.shift,
+                          certify=args.certify)
     fig = render_figure(curve, args.shift, args.certify, bound,
                         os.path.join(root, "results"))
     print(f"\nwritten to {out}" + (f" and {fig}" if fig else ""))

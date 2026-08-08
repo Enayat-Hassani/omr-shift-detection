@@ -10,25 +10,25 @@ python3 benchmark/omrbench.py --n 12              # comparison table in REPORT.m
 python3 benchmark/mechanisms.py --n 14            # per-mechanism table in REPORT.md section 4.3
 python3 benchmark/verify_corpus.py                # controls; exits non-zero on failure
 python3 benchmark/policy_profiles.py              # profile table and figure in REPORT.md section 6.1, and A6
+python3 benchmark/cohort_screen.py                # cohort false discovery screen in REPORT.md sections 6.2 and 6.3
 python3 benchmark/figures.py                      # README comparison figure, redrawn from the committed corpus 2 summary
 python3 analysis/error_families.py                # error family table in CASE_REPORT.md section 5
 python3 analysis/latent_structure.py              # structure tests in CASE_REPORT.md sections 4 and 8
 ```
 
-Two further commands build the second corpus in REPORT.md section 6.4. They are
-separated because they are the long ones: the first takes about 2.1 hours. The
-second has not been re-timed since the permutation scan was batched, and it runs
-nine times as many draws per sheet, so allow longer.
+The second corpus is separated because it is the long one: about 1.6 hours on
+eight cores.
 
 ```bash
-python3 benchmark/large_synthetic.py --full                                        # current default
-python3 benchmark/large_synthetic.py --full --level 0.001 --out results/large_synthetic_conservative
+python3 benchmark/large_synthetic.py --full --jobs 8
 ```
 
-The second run reproduces the Conservative column of the table in section 6.4.
-`--level` overrides the acceptance level for the metrics arm and leaves every
-other threshold at its shipped value, so the two runs differ in one quantity. Both
-use seed 20260804 and generate identical sheets.
+This reproduces REPORT.md section 6.5, at the shipped default. `--level`
+overrides the acceptance level for the metrics arm and leaves every other
+threshold at its shipped value, so runs at different levels differ in exactly one
+quantity and generate identical sheets from seed 20260804. Nothing published is
+built from a non-default level; the level comparison in section 6.4 comes from
+the profile study, which is smaller and made for that purpose.
 
 Use `--quick` for an eight-second smoke run, or `--n` to set sheets per cell.
 Output goes to `results/large_synthetic/` unless `--out` is given.

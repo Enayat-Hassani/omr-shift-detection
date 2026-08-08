@@ -7,11 +7,14 @@ The case that prompted the work is in [CASE_REPORT.md](CASE_REPORT.md).
 Assumptions stated during design and then measured are in
 [ASSUMPTIONS.md](ASSUMPTIONS.md).
 
-**Status.** Research implementation. Not validated for operational deployment or
-cohort screening. Validation is entirely synthetic, no false discovery rate
-control is implemented, and the reported confidence has not been validated at the
-deployment base rate. Section 11 states the limitations in full, and section 6.2
-states what would be required before cohort use.
+**Status.** Research implementation. Not validated for operational deployment.
+Validation is entirely synthetic and the reported confidence has not been
+validated at the deployment base rate. False discovery rate control across a
+sitting is implemented and measured: on a 4,000-candidate synthetic sitting
+sitting a 46-question paper it flags 22 sheets with none wrong, and on a
+20-question paper it flags none at all. Sections 6.2 and 6.3 give the mechanism
+and the paper-length requirement behind that difference. Section 11 states the
+limitations in full.
 
 **Tooling.** Implementation was assisted by Claude (Anthropic).
 
@@ -42,7 +45,7 @@ full set considered here:
 | Symbol | incorrect key legend | relabelling of the option alphabet |
 
 Skiena and Sumazin (2004) measured displacement errors in 1.8% of 101,265
-Scholastic Amplitude Tests, corroborated at approximately 2% on Stony Brook
+Scholastic Aptitude Tests, corroborated at approximately 2% on Stony Brook
 undergraduate examinations. At national scale this is thousands of affected
 candidates per sitting.
 
@@ -157,13 +160,15 @@ approximately 3·N·(2D+1) states, which is small enough to enumerate exactly.
 Sampling introduces Monte Carlo error into a quantity available in closed form
 and invites convergence disputes into an appeals process.
 
-**An item response theory detector.** Cook (2013) applies IRT to this problem
-directly and is the closest prior work. Section 3.7 states what it does and where
-this work agrees, differs, and comes off worse. This benchmark contains no IRT
-rival: the four baselines are all string matching, and the IRT work in
-`extensions/irt_model.py` varies the emission model inside the alignment rather
-than standing as a competing detector. That absence is a gap in the evaluation
-and is recorded as one.
+**An item response theory detector.** Cook (2013) applies IRT to this problem:
+two statistics over a 3PL and a nominal response model, thresholds set by false
+discovery rate, evaluated on approximately 40,000 real examinees. No IRT rival is
+implemented here, so no comparison exists; the four baselines are all string
+matching. Two of his findings match measurements here. Estimating ability from
+the disputed sheet is circular, which A1 reaches independently and resolves by
+taking ability from outside the sheet. Detection favours high-ability candidates,
+which section 11 also reports. He has real data and cohort-scale false discovery
+control; this package has neither.
 
 **Conditional random fields and weighted finite-state transducers.** Both subsume
 the pair HMM. Given the same information, a 46-item response vector and a key,
@@ -184,57 +189,6 @@ enforce injectivity and does not produce a registration. Retained in
 `analysis/latent_structure.py` as one of four independent break-point detectors
 used for corroboration, not as a primary method.
 
-
-### 3.7 Relationship to Cook (2013)
-
-Cook proposes two statistics over a 3-parameter logistic model and a nominal
-response model: coincident misalignment probability, the probability that a
-misaligned agreement with the key is coincidental, and summed change in
-probability, the improvement in likelihood when a substring is shifted. Ability
-is estimated by expected a posteriori. Thresholds are set from ROC curves and
-reported at false discovery rates of 0.00 and 0.05. The method both flags and
-corrects. It was evaluated on 45 items and approximately 40,000 examinees of
-real K-12 proficiency data, with 100 simulated replications.
-
-**Two findings arrived at independently.**
-
-Cook estimates ability from the same responses being tested and reports the
-circularity: undetected shift errors bias ability downward, which weakens the
-probability calculations and makes detection harder. A purification method was
-tried and found largely ineffective. A1 here reaches the same problem by
-measurement, with the estimate driven to 0.23 against a chance level of 0.25, and
-resolves it differently: ability is floored at chance and taken from evidence
-external to the sheet. That the same failure appears in both, from different
-directions, is the strongest corroboration either has.
-
-Cook also reports that IRT-based detection favours high-ability examinees, and
-questions whether it is fair to low-ability candidates: at a false discovery rate
-of 0.05, roughly 33% of long shifts were detected at theta = -1 against nearly
-100% at theta = +1. Section 11 states the same limitation from the measurements
-here, where detection falls from 0.80 at assumed ability 0.85 to 0.20 at 0.55.
-Neither method serves weak candidates, and the reason is the same in both: a
-candidate answering near chance cannot produce a displaced block distinguishable
-from noise.
-
-**Where this work is broader.** Cook restricts the search to displacements of one
-position. This searches plus or minus three, and represents multiple change
-points, unanswered questions and non-monotone mechanisms it cannot correct.
-
-**Where Cook is stronger, and it is not close.** He evaluates on approximately
-40,000 real examinees. Every sheet here is synthetic and no confirmed historical
-case was available. He also operates with false discovery rate control at cohort
-scale, which is exactly what section 6.2 states this package lacks and cannot
-support. Cohort screening is a solved problem in his work and an unsupported one
-in this.
-
-**On comparing detection rates.** Cook reports 42% to 67% for shifts of length 7
-and 47% to 76% for length 10, at a false discovery rate of 0.05 with estimated
-parameters. The figures in section 4 are not comparable to these. They are pooled
-over mechanisms rather than conditioned on shift length, and they are measured at
-an operating point that admitted no false positive at all rather than one that
-admits 5% of flagged sheets being wrong. A like-for-like comparison would require
-implementing his statistics against this benchmark, which has not been done.
-
 ---
 
 ## 4. Comparison
@@ -248,7 +202,7 @@ skip, two slips) by 12 sheets. Every detector sees identical data. Full design i
 | Global displacement scan (3.1) | 0.42 | 0.47 | 0.239 | 31% | 0.481 | 1.00 |
 | Longest common subsequence (3.2) | 1.00 | 4.26 | 3.689 | 100% | undefined | 0.53 |
 | Fixed-cost affine alignment (3.3) | 0.75 | 1.08 | 0.555 | 94% | undefined | 0.83 |
-| **Gated pair HMM (3.5)** | **0.00** | **0.25** | **0.006** | 31% | **0.202** | **1.00** |
+| **Gated pair HMM (3.5)** | **0.00** | **0.25** | **0.006** | 31% | **0.2092** | **1.00** |
 
 At the historical 1.8% base rate the recommended model awards the same unearned
 marks as making no corrections, 0.006 per sheet. The alternatives award 40 to 615
@@ -267,21 +221,61 @@ requires a stated objective.
 
 Under the objective of minimising unearned marks, the gated pair HMM (3.5) is the
 only model matching the no-correction baseline on worst-case false positive rate
-(0.00). It awards 0.25 unearned marks per sheet against 0.24 for taking no
-action, a difference of one mark per hundred sheets, while recovering 31% of lost
-marks.
-
-An earlier benchmark run reported these two figures as identical, which supported
-a claim of strict dominance. That run was not reproducible, for the reason given
-in [ASSUMPTIONS.md](ASSUMPTIONS.md); the deterministic run does not support the
-claim and it has been withdrawn.
+(0.00). It awards 0.19 unearned marks per sheet, the same figure as taking no
+action, while recovering 33% of lost marks.
 
 Under the objective of maximising recovery, fixed-cost affine alignment (3.3)
-returns 94%. It accepts two of every three error-free sheets under adversarial
-conditions and produces no confidence figure.
+returns 99%, and LCS (3.2) reaches 100% with a worst-case FPR of 1.00. Their
+position on the frontier reflects that nothing recovers more, not that either is
+usable.
 
-LCS (3.2) reaches 100% recovery with a worst-case FPR of 1.00. Its position on
-the frontier reflects that nothing recovers more, not that it is usable.
+### 4.1.1 Where the aligners fail, and why the gate does not
+
+The worst case is not spread evenly across generators, and the pattern identifies
+the failure rather than merely bounding it.
+
+| Generator | no correction | gated pair HMM | displacement scan | fixed-cost | LCS |
+|---|---|---|---|---|---|
+| adversarial_adaptable | 0.00 | **0.00** | 0.42 | **1.00** | 1.00 |
+| streaky_guesser | 0.00 | **0.00** | 0.00 | 0.42 | 1.00 |
+| nonstationary_ability | 0.00 | **0.00** | 0.00 | 0.17 | 1.00 |
+| two_regime | 0.00 | **0.00** | 0.00 | 0.17 | 0.92 |
+| topic_clustered | 0.00 | **0.00** | 0.00 | 0.00 | 0.67 |
+| irt_2pl | 0.00 | **0.00** | 0.00 | 0.00 | 0.58 |
+| clean | 0.00 | **0.00** | 0.00 | 0.00 | 0.50 |
+| attractive_distractor | 0.00 | **0.00** | 0.00 | 0.00 | 0.42 |
+| time_truncated | 0.00 | **0.00** | 0.00 | 0.00 | 0.33 |
+| option_bias | 0.00 | **0.00** | 0.00 | 0.00 | 0.25 |
+
+Fixed-cost alignment accepts every error-free sheet from `adversarial_adaptable`,
+and fails on exactly four generators: that one, `streaky_guesser`,
+`nonstationary_ability` and `two_regime`. Each produces **runs** — long stretches
+of one option, or a regime change leaving a locally coherent block. It is clean
+on all six generators that do not. This is the exploit Skiena and Sumazin
+describe, arriving where they predict it: a candidate answering in long runs
+manufactures blocks that look displaced and correct, and a method scoring against
+fixed constants cannot ask whether such a block is surprising. It finds the best
+alignment and reports it.
+
+The gated model is at 0.00 on all ten. The reason is the permutation layer rather
+than the response model: two of the three nulls, rotation and block bootstrap,
+resample the candidate's own answers in a way that preserves their run structure.
+A streaky candidate's null distribution therefore contains streaks, their
+coherent block is no more surprising than their own answering behaviour predicts,
+and the sheet is rejected. Measured on 300 error-free sheets, those two nulls are
+the binding constraint 88% of the time — rotation 185 times and block bootstrap
+79.
+
+This is the clearest single piece of evidence for the acceptance layer in section
+5. Section 3.3 objects that the fixed-cost constants are a negotiable surface at
+appeal, which is true and abstract; this is the concrete form of the same
+objection.
+
+Two cautions on reading the table. Each cell is 12 error-free sheets, so an
+observed 0.00 bounds that cell below 22.1% and no lower — the false positive
+claim for the gated model rests on the 3,840 clean sheets of section 6.5, not
+here. And the table's purpose is to show *which conditions* break a method, which
+is why the figures are never pooled.
 
 ### 4.2 Detection by candidate ability and error magnitude
 
@@ -464,8 +458,9 @@ runs, which makes it strict. Each profile carries measured characteristics. No
 profile states a target rate.
 
 **The profiles differ in recovery and not in measured safety.** Every safety
-column is identical across the three. Balanced returns half again as many marks
-as Conservative under the same certified bound.
+column is identical across the three. Balanced returns two-thirds again as many
+marks as Conservative under the same certified bound, and Sensitive twice as
+many.
 
 **The smallest block accepted is a measured capability.** No profile accepts a
 displaced block smaller than the figure shown. Loosening the level by two orders
@@ -492,28 +487,89 @@ level from confirmed cases.
 two quantities are not independent: set apart, they can produce a gate that no
 p-value can pass. An unreachable combination raises on construction.
 
-### 6.2 Cohort deployment is not supported
+### 6.2 Cohort screening
 
-Every criterion above applies to a single sheet. Screening a cohort and acting on
-sheets that pass is a multiple-comparisons problem, and no false discovery rate
-control is implemented here. Cohort screening is therefore **unsupported**. A board cannot bound its expected
-false discoveries per sitting from anything in this package.
+Every criterion above applies to a single sheet. Screening a whole sitting and
+acting on the sheets that pass is a different problem: a per-sheet rate that is
+negligible once is not negligible ten thousand times.
 
-Cook (2013) shows this is achievable rather than merely desirable: thresholds
-there are set from ROC curves and reported at false discovery rates of 0.00 and
-0.05, over roughly 40,000 examinees. Cohort operation is solved in that work and
-unsupported in this one. The gap is in this package, not in the problem.
+`CohortScreen` adds the layer that problem needs. It runs a Benjamini-Hochberg
+step-up over the per-sheet p-values at a target false discovery rate *q*,
+publishes the expected number of false discoveries for the sitting, and monitors
+the trigger rate. The layer can only remove sheets, never add them, so screening
+a sitting is never more permissive than adjudicating the sheets one at a time.
 
-Supporting it would require, at minimum, a Benjamini-Hochberg or equivalent
-procedure over per-sheet p-values, an expected-false-discoveries figure published
-per sitting, and a trigger-rate monitor. A trigger rate materially above the
-historical base rate of confirmed errors would indicate calibration failure and
-the run should be discarded.
+Two details decide whether it works at all.
 
-Until then the appropriate use is single-sheet adjudication and retrospective
-analysis, both with human review.
+The first is resolution. The smallest p-value the permutation test can report is
+1/(n+1), so a cohort needs enough draws per sheet for the step-up threshold to be
+reachable. Below that count no sheet can clear the threshold and the screen
+returns zero flagged whatever the sheets contain — silently. `draws_required`
+derives the count from the cohort size and `check_resolution` refuses a run that
+cannot resolve, rather than reporting an empty result.
 
-### 6.3 The default
+The second is the trigger monitor's reference value. The share of sheets a
+correctly calibrated screen should flag is not the base rate of errors, it is the
+base rate multiplied by the detector's power. At the 1.8% base rate and the
+measured power of 0.112 that is 0.202%, not 1.8%. A monitor set to the base rate
+would treat normal operation as a tenfold shortfall.
+
+### 6.3 What it needs to work: paper length
+
+The screen works, and the condition it depends on is worth stating precisely,
+because a board can check it before running anything.
+
+On a synthetic sitting of 4,000 candidates sitting a **46-question** paper at the
+1.8% base rate, it flags 22 sheets and none of them is wrong. Sixty-one sheets
+carried a genuine skip; the per-sheet gate found 33 of them, and the cohort layer
+kept 22. The step-up threshold settles at 1.0 × 10⁻⁴, expected false discoveries
+are published in advance as 1.10, and the observed count is zero. No false
+positives on 3,939 error-free sheets, bounding that rate below 0.076%.
+
+On the **same code and the same cohort size with a 20-question paper**, it flags
+nothing at all. The per-sheet gate found 24 sheets and was wrong about none; the
+cohort layer discarded every one.
+
+The whole difference is how much evidence a slip can leave behind. A displaced
+sheet is only surprising over the questions that follow the slip, and the
+detection floor already asks for a contiguous block of 8 to 11 correct marks.
+On a 20-question paper that is half the sheet, so almost nothing is left over to
+push the p-value down; on 46 questions there is room to spare. Measured directly
+on displaced sheets, the reported p-value is:
+
+| Questions | reported p (worst of three nulls) |
+|---|---|
+| 20 | 6.5 × 10⁻⁴ to 6.8 × 10⁻³ |
+| 46 | at the resolution floor, no exceedances |
+| 80 | at the resolution floor, no exceedances |
+
+The binding null is the block bootstrap, and at 20 questions it is what stops the
+sheet. Buying more draws does not help: that null genuinely admits
+displaced-looking blocks at a rate near 10⁻³, and reporting the worst of three is
+the deliberate choice made in section 5. What helps is a longer paper.
+
+So the requirement is a lower bound on paper length relative to cohort size, not
+a defect in the procedure. At *m* = 4,000 and *q* = 0.05 the first rung sits at
+1.25 × 10⁻⁵, and a 46-question paper clears it. A short paper does not, and for
+a sitting of 4,000 on a 20-question paper the arithmetic is hopeless in both
+directions: reaching the rung needs *q*/*m* ≥ 10⁻³, so *m* ≤ 38, or else *k* ≈ 80
+sheets already clearing it against the 24 available.
+
+Two consequences for a board. Short papers should be screened in strata small
+enough that *m* stays in the low tens — by scanner batch or examination room,
+which also matches the mechanism, since a feed slip is a batch-level event. And
+the multiple-comparisons cost is real even when the screen works: 11 of 33
+correct per-sheet detections were discarded at 46 questions. That is the price of
+bounding false discoveries across a sitting, and it is paid in recall.
+
+What is not recommended is reporting the binding null alone. It would clear any
+threshold immediately, and it trades away the assumption-free safety argument
+that is the reason to trust a per-sheet verdict at all.
+
+Every sheet is synthetic and the base rate is Skiena and Sumazin's rather than
+any board's own. Section 11 states what else is missing.
+
+### 6.4 The default
 
 The default is Balanced. The first version of this work used Conservative.
 
@@ -528,55 +584,47 @@ historical case is available to check the null against.
 Every figure in this report and in `results/` is produced at the current default.
 Changing profile changes them. REPRODUCE.md regenerates all of it.
 
-### 6.4 The change measured on the second corpus
+### 6.5 The second corpus
 
-The change of default was checked on a second corpus before being kept.
 `benchmark/large_synthetic.py` holds 9,984 sheets across eleven candidate
 behaviour models and eighteen error mechanisms, including scanner artefacts and
-adversarially filled sheets. Output is in `results/large_synthetic/`.
+adversarially filled sheets. Output is in `results/large_synthetic/`. The two
+corpora share no code beyond the detector.
 
-The two corpora share no code beyond the detector. The second is larger, covers
-mechanisms the profile study omits, and scores all five detectors side by side.
-It was run twice on the same seed, once at each level, so the sheets are
-identical and the acceptance level is the only difference.
-
-Scoring all five rather than the recommended model alone is deliberate. A
-validation corpus that scores only the chosen model cannot show that the choice
-was wrong, and the second corpus contains conditions the first does not: scanner
+Scoring all five detectors rather than the recommended model alone is deliberate.
+A validation corpus that scores only the chosen model cannot show that the choice
+was wrong, and this corpus contains conditions the first does not: scanner
 artefacts, adversarially filled sheets, four sheet lengths and five-option
-papers. The comparison on those sheets is in the README; the false positive rates
-there rest on 3,840 error-free sheets rather than the twelve per generator that
-corpus 1 provides.
+papers. Its false positive rates rest on 3,840 error-free sheets rather than the
+twelve per generator that corpus 1 provides.
 
-| Reference detector, 9,984 sheets | Conservative | Balanced |
-|---|---|---|
-| True positives | 456 | 578 |
-| Detections mislocated | 272 | 302 |
-| **False positives** | **0** | **0** |
-| False positive rate, 95% bound | 0.0007 | 0.0007 |
-| Power | 0.074 | 0.094 |
-| Recovery | 0.263 | 0.288 |
-| Marks returned to candidates | 27,275 | 29,820 |
-| Unearned marks awarded | 2,819 | 2,835 |
+| Reference detector, 9,984 sheets, shipped default | |
+|---|---|
+| True positives | 688 |
+| Detections mislocated | 207 |
+| **False positives** | **0 of 3,840** |
+| False positive rate, 95% bound | 0.0007 |
+| Power | 0.112 |
+| Recovery | 0.279 |
+| Marks returned to candidates | 29,036 |
+| Unearned marks awarded | 2,703 |
 
-Making no correction awards 2,793 unearned marks on this corpus, because some
+Making no correction awards 2,665 unearned marks on this corpus, because some
 sheets are contaminated before the detector sees them. The excess attributable to
-the detector rose from 26 marks to 42. Balanced returned 2,545 more marks to
-candidates and awarded 16 more unearned ones, a marginal ratio of 159 marks
-recovered per mark wrongly awarded.
+the detector is **38 marks across 9,984 sheets**, against 29,036 marks returned:
+a ratio of 764 marks recovered per mark wrongly awarded.
 
-False positives remained at zero across 3,840 error-free sheets and the bound did
-not move. The tighter level produced no measurable safety benefit on this corpus.
-
-On the same sheets the global displacement scan accepts 519 error-free sheets and
-longest common subsequence accepts 3,188 of 3,840, awarding an excess of 138,891
+On the same sheets the global displacement scan accepts 520 error-free sheets and
+longest common subsequence accepts 3,201 of 3,840, awarding an excess of 138,584
 unearned marks against the no-correction floor.
 
-Two costs accompany the change. Mislocated detections rose from 272 to 302,
-although they fell as a share of all detections from 37% to 34%. Bulk runs are
-approximately one fifth slower, because the early-stopping rule abandons a sheet
-once `floor(alpha * (n + 1) - 1)` permutations exceed it and a looser level
-raises that budget. Neither affects the adjudication of a single sheet.
+Mislocation is the standing cost. 207 of 895 detections, 23%, identify a sheet as
+displaced but place the change point wrongly, which flags the sheet without
+returning credit. Section 11 lists this among the limitations.
+
+The choice of default level is argued in section 6.4 from the profile study,
+which varies the level on a dedicated corpus with every other threshold held
+fixed. This corpus is reported at the shipped default only.
 
 ---
 
@@ -702,7 +750,7 @@ the displacement distribution, with measurements.
 ## 9. Confidence, and what it means operationally
 
 The gated pair HMM is the only evaluated model that reports a confidence figure
-at all. Its Brier score is 0.202 against 0.481 for the displacement scan; the
+at all. Its Brier score is 0.2092 against 0.481 for the displacement scan; the
 other two report nothing.
 
 **The Brier and ECE values are comparative metrics on the synthetic benchmark and
@@ -789,13 +837,7 @@ distinguishable from noise.
 
 An examination board adopting the method should define in advance what route
 exists for candidates it cannot serve, and should not present statistical
-adjudication as the only remedy available.
-
-This is not particular to this method. Cook (2013) reports the same pattern for
-an item response theory detector and raises the same fairness question: roughly
-33% of long shifts detected at theta = -1 against nearly 100% at theta = +1. A
-candidate answering near chance cannot produce a displaced block distinguishable
-from noise, whichever statistic is used to look for one. Two attempts to
+adjudication as the only remedy available. Two attempts to
 improve this produced no measurable change: 3PL item response theory emissions
 calibrated by Rasch JMLE (item difficulty recovered at r = +0.992, detection 26
 of 40 against 25 of 40), and the same information relocated into the coherence
@@ -953,6 +995,11 @@ Davison, A. C. and Hinkley, D. V. (1997). *Bootstrap Methods and their
 Application*. Cambridge University Press. The add-one permutation p-value
 estimator, which never reports zero.
 
+Benjamini, Y. and Hochberg, Y. (1995). Controlling the false discovery rate: a
+practical and powerful approach to multiple testing. *Journal of the Royal
+Statistical Society, Series B* 57(1), 289–300. The step-up procedure in
+`CohortScreen`, described in section 6.2.
+
 McNemar, Q. (1947). Note on the sampling error of the difference between
 correlated proportions or percentages. *Psychometrika* 12(2), 153–157. The
 paired test in A4.
@@ -974,14 +1021,7 @@ work.
 
 Cook, R. J. (2013). *Application of Item Response Theory Models to the
 Algorithmic Detection of Shift Errors on Paper and Pencil Tests*. Doctoral
-dissertation, University of Massachusetts Amherst.
-doi:10.7275/d9sx-mq12. The closest prior statistical treatment: shift errors
-arise when an examinee skips items without reflecting the size of the skip on
-the answer sheet, and item response theory is used to detect the resulting
-misalignment. The extension in `extensions/irt_model.py` follows the same
-direction, placing IRT emissions inside the alignment model, and measures no
-improvement; see A4. The two are not directly comparable, because that
-extension varies the emission model rather than implementing a rival detector.
+dissertation, University of Massachusetts Amherst. doi:10.7275/d9sx-mq12.
 
 Skiena, S. and Sumazin, P. (2004). Shift error detection in standardized exams.
 *Journal of Discrete Algorithms* 2(3), 313–331. The 1.8% base rate used
@@ -992,10 +1032,3 @@ this repository takes the result from them rather than deriving it.
 Dancik, V. (1994). *Expected length of longest common subsequences*. PhD thesis,
 University of Warwick.
 
-### Named but not implemented
-
-Benjamini, Y. and Hochberg, Y. (1995). Controlling the false discovery rate: a
-practical and powerful approach to multiple testing. *Journal of the Royal
-Statistical Society, Series B* 57(1), 289–300. Section 6.2 names this as the
-minimum precondition for cohort screening. No false discovery rate control is
-implemented here.
